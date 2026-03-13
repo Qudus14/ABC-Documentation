@@ -71,9 +71,9 @@ export default function ApiKeysPage() {
               </p>
             </div>
             <div className="rounded-2xl border border-border bg-card p-5">
-              <h3 id="check-reference">Set references</h3>
+              <h3 id="check-reference">Pass referenceNumber</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Add a custom reference for order reconciliation where your product needs one.
+                Include the customer reference number in every SDK initialization so orders can be reconciled correctly.
               </p>
             </div>
             <div className="rounded-2xl border border-border bg-card p-5">

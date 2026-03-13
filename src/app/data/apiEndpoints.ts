@@ -92,6 +92,7 @@ export const apiEndpoints: ApiEndpoint[] = [
   function startPayment() {
     new EgolePay({
       apiKey: 'sk_test_xxxxxxxxxxxxxxxx',
+      referenceNumber: 'EGP77154452626262622',
       amount: 5000,
       email: 'customer@example.com'
     });
@@ -112,6 +113,7 @@ export const apiEndpoints: ApiEndpoint[] = [
   function startPayment() {
     new EgolePay({
       apiKey: 'sk_test_xxxxxxxxxxxxxxxx',
+      referenceNumber: 'EGP77154452626262622',
       amount: 5000,
       email: 'customer@example.com'
     });
@@ -131,6 +133,7 @@ export const apiEndpoints: ApiEndpoint[] = [
     document.getElementById('pay-button').addEventListener('click', function () {
       new EgolePay({
         apiKey: 'sk_test_xxxxxxxxxxxxxxxx',
+        referenceNumber: 'EGP77154452626262622',
         amount: 5000,
         email: 'customer@example.com'
       });
@@ -146,11 +149,12 @@ export const apiEndpoints: ApiEndpoint[] = [
     id: 'initialize-payment',
     category: 'SDK Basics',
     title: 'Initialize Payment',
-    description: 'Create a checkout session by passing your API key, transaction details, and lifecycle callbacks into the EgolePay constructor.',
+    description: 'Create a checkout session by passing your API key, customer reference number, transaction details, and lifecycle callbacks into the EgolePay constructor.',
     method: 'SDK',
     route: 'new EgolePay(config)',
     copyValue: `new EgolePay({
   apiKey: 'sk_test_xxxxxxxxxxxxxxxx',
+  referenceNumber: 'EGP77154452626262622',
   amount: 5000,
   email: 'customer@example.com'
 })`,
@@ -158,9 +162,9 @@ export const apiEndpoints: ApiEndpoint[] = [
     requestParametersTitle: 'Configuration Options',
     requestParameters: [
       { name: 'apiKey', type: 'string', required: true, description: 'Your EgolePay API key. Use sk_test_ in sandbox and sk_live_ in production.' },
+      { name: 'referenceNumber', type: 'string', required: true, description: 'Required customer reference number passed with each payment initialization for reconciliation and tracking.' },
       { name: 'amount', type: 'number', required: true, description: 'Amount in NGN. Minimum amount is N100.' },
       { name: 'email', type: 'string', required: true, description: 'Customer email used for payment confirmation and transaction tracking.' },
-      { name: 'reference', type: 'string', required: false, description: 'Optional custom reference such as ORDER_12345 or INV_2024_001.' },
       { name: 'customerName', type: 'string', required: false, description: 'Customer full name shown during checkout and available in your records.' },
       { name: 'phone', type: 'string', required: false, description: 'Customer phone number in local or international format.' }
     ],
@@ -169,9 +173,9 @@ export const apiEndpoints: ApiEndpoint[] = [
     sampleRequest: `function startPayment() {
   new EgolePay({
     apiKey: 'sk_test_xxxxxxxxxxxxxxxx',
+    referenceNumber: 'EGP77154452626262622',
     amount: 5000,
     email: 'customer@example.com',
-    reference: 'ORDER_12345',
     onSuccess: function (response) {
       console.log('Payment successful!', response);
       window.location.href = '/success?ref=' + response.transactionReference;
@@ -203,6 +207,7 @@ export const apiEndpoints: ApiEndpoint[] = [
           code: `function pay() {
   new EgolePay({
     apiKey: 'sk_test_xxxxxxxxxx',
+    referenceNumber: 'EGP77154452626262622',
     amount: 5000,
     email: 'customer@example.com',
     onSuccess: (res) => window.location.href = '/success',
@@ -216,11 +221,11 @@ export const apiEndpoints: ApiEndpoint[] = [
           language: 'javascript',
           code: `new EgolePay({
   apiKey: 'sk_test_xxxxxxxxxx',
+  referenceNumber: 'EGP77154452626262622',
   amount: 10000,
   email: 'john@example.com',
   customerName: 'John Doe',
   phone: '+2348012345678',
-  reference: 'INV_2024_001',
   onSuccess: function (res) {
     updateOrderStatus(res.transactionReference);
     window.location.href = '/thank-you';
@@ -267,6 +272,7 @@ export const apiEndpoints: ApiEndpoint[] = [
     sampleRequestLanguage: 'javascript',
     sampleRequest: `new EgolePay({
   apiKey: 'sk_test_xxxxxxxxxx',
+  referenceNumber: 'EGP77154452626262622',
   amount: 5000,
   email: 'customer@example.com',
   onSuccess: function (response) {
@@ -345,25 +351,27 @@ export const apiEndpoints: ApiEndpoint[] = [
     id: 'react-component',
     category: 'Framework Guides',
     title: 'React Component',
-    description: 'Wrap EgolePay checkout in a reusable React button that receives amount, email, and success handlers through props.',
+    description: 'Wrap EgolePay checkout in a reusable React button that receives amount, email, referenceNumber, and success handlers through props.',
     method: 'GUIDE',
-    route: 'function PaymentButton({ amount, email, onSuccess })',
-    copyValue: 'function PaymentButton({ amount, email, onSuccess })',
+    route: 'function PaymentButton({ amount, email, referenceNumber, onSuccess })',
+    copyValue: 'function PaymentButton({ amount, email, referenceNumber, onSuccess })',
     authenticationRequired: false,
     requestParametersTitle: 'Component Props',
     requestParameters: [
       { name: 'amount', type: 'number', required: true, description: 'Amount passed into the component and used for checkout.' },
       { name: 'email', type: 'string', required: true, description: 'Customer email used in the EgolePay config.' },
+      { name: 'referenceNumber', type: 'string', required: true, description: 'Customer reference number forwarded into the EgolePay config.' },
       { name: 'onSuccess', type: '(response) => void', required: true, description: 'Handler that receives the EgolePay success payload.' }
     ],
     sampleRequestTitle: 'React Example',
     sampleRequestLanguage: 'jsx',
     sampleRequest: `import React from 'react';
 
-function PaymentButton({ amount, email, onSuccess }) {
+function PaymentButton({ amount, email, referenceNumber, onSuccess }) {
   const handlePayment = () => {
     new window.EgolePay({
       apiKey: process.env.REACT_APP_EGOLEPAY_KEY,
+      referenceNumber,
       amount,
       email,
       onSuccess
@@ -396,6 +404,7 @@ function PaymentButton({ amount, email, onSuccess }) {
     <PaymentButton
       amount={5000}
       email="customer@example.com"
+      referenceNumber="EGP77154452626262622"
       onSuccess={(response) => {
         window.location.href = '/success?ref=' + response.transactionReference;
       }}
@@ -420,6 +429,7 @@ function PaymentButton({ amount, email, onSuccess }) {
     requestParameters: [
       { name: 'amount', type: 'Number', required: true, description: 'Checkout amount rendered in the button and sent to EgolePay.' },
       { name: 'email', type: 'String', required: true, description: 'Customer email passed into the SDK config.' },
+      { name: 'referenceNumber', type: 'String', required: true, description: 'Customer reference number passed into the SDK config.' },
       { name: 'loading', type: 'Boolean', required: false, description: 'Component state that disables the button while checkout is in progress.' }
     ],
     sampleRequestTitle: 'Vue Example',
@@ -432,7 +442,7 @@ function PaymentButton({ amount, email, onSuccess }) {
 
 <script>
 export default {
-  props: ['amount', 'email'],
+  props: ['amount', 'email', 'referenceNumber'],
   data() {
     return {
       loading: false
@@ -444,6 +454,7 @@ export default {
 
       new window.EgolePay({
         apiKey: process.env.VUE_APP_EGOLEPAY_KEY,
+        referenceNumber: this.referenceNumber,
         amount: this.amount,
         email: this.email,
         onSuccess: (response) => {
@@ -477,6 +488,7 @@ export default {
           code: `<payment-button
   :amount="5000"
   email="customer@example.com"
+  reference-number="EGP77154452626262622"
   @success="handleSuccess"
   @error="handleError"
 />`
@@ -498,6 +510,7 @@ export default {
     requestParameters: [
       { name: '@Input() amount', type: 'number', required: true, description: 'Amount displayed in the template and sent to the SDK.' },
       { name: '@Input() email', type: 'string', required: true, description: 'Customer email used for the payment request.' },
+      { name: '@Input() referenceNumber', type: 'string', required: true, description: 'Customer reference number passed into the EgolePay setup.' },
       { name: '@Output() success', type: 'EventEmitter<any>', required: true, description: 'Emits the EgolePay success response to the parent component.' },
       { name: '@Output() error', type: 'EventEmitter<any>', required: true, description: 'Emits SDK errors so the parent can react to failures.' }
     ],
@@ -516,6 +529,7 @@ export default {
 export class PaymentComponent {
   @Input() amount!: number;
   @Input() email!: string;
+  @Input() referenceNumber!: string;
   @Output() success = new EventEmitter();
   @Output() error = new EventEmitter();
 
@@ -526,6 +540,7 @@ export class PaymentComponent {
 
     new (window as any).EgolePay({
       apiKey: 'sk_test_xxxxxxxxxx',
+      referenceNumber: this.referenceNumber,
       amount: this.amount,
       email: this.email,
       onSuccess: (response: unknown) => {
@@ -557,6 +572,7 @@ export class PaymentComponent {
           code: `<app-payment
   [amount]="5000"
   email="customer@example.com"
+  referenceNumber="EGP77154452626262622"
   (success)="handleSuccess($event)"
   (error)="handleError($event)"
 ></app-payment>`

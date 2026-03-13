@@ -92,6 +92,7 @@ export default function LandingPage() {
 function startPayment() {
   new EgolePay({
     apiKey: 'sk_test_xxxxxxxxxxxxxxxx',
+    referenceNumber: 'EGP77154452626262622',
     amount: 5000,
     email: 'customer@example.com',
     onSuccess: (response) => {

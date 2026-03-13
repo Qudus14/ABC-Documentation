@@ -41,7 +41,7 @@ export default function IntroductionPage() {
               <p className="text-sm font-semibold text-[#C56A00]">Step 2</p>
               <h3 id="initialize-checkout" className="mt-2">Initialize payment</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Pass your API key, amount, email, and any optional references or callbacks into <code>new EgolePay()</code>.
+                Pass your API key, amount, email, customer <code>referenceNumber</code>, and any callbacks into <code>new EgolePay()</code>.
               </p>
             </div>
             <div className="rounded-2xl border border-border bg-card p-5">
@@ -68,6 +68,7 @@ export default function IntroductionPage() {
   function startPayment() {
     new EgolePay({
       apiKey: 'sk_test_xxxxxxxxxxxxxxxx',
+      referenceNumber: 'EGP77154452626262622',
       amount: 5000,
       email: 'customer@example.com',
       onSuccess: function (response) {
@@ -119,7 +120,7 @@ export default function IntroductionPage() {
             <Link to="/docs/initialize-payment" className="rounded-2xl border border-border bg-card p-5 transition-colors hover:border-[#FF8000]/40 hover:bg-[#FF8000]/[0.03]">
               <h3 id="configuration-guide">Configuration guide</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Review all supported configuration options, references, and customer fields.
+                Review all supported configuration options, including the required customer reference number and other customer fields.
               </p>
             </Link>
             <Link to="/docs/callback-events" className="rounded-2xl border border-border bg-card p-5 transition-colors hover:border-[#FF8000]/40 hover:bg-[#FF8000]/[0.03]">
