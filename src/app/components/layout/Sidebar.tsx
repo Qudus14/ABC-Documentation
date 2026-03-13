@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronRight, FileText, GitBranch, Key, CreditCard, Send, Receipt, Zap, Webhook, AlertCircle, Package, Download, Clock, BookOpen } from 'lucide-react';
+import { AlertCircle, BookOpen, ChevronDown, ChevronRight, CircleHelp, Clock, FileText, FlaskConical, Key, Sparkles } from 'lucide-react';
 import { Link, useLocation } from 'react-router';
 import { ScrollArea } from '../ui/scroll-area';
 import { apiEndpoints, categories } from '../../data/apiEndpoints';
@@ -10,13 +10,11 @@ interface SidebarProps {
 
 export function Sidebar({ className = '' }: SidebarProps) {
   const location = useLocation();
-  const [expandedCategories, setExpandedCategories] = useState<string[]>(['Payments API']);
+  const [expandedCategories, setExpandedCategories] = useState<string[]>(categories);
 
   const toggleCategory = (category: string) => {
-    setExpandedCategories(prev =>
-      prev.includes(category)
-        ? prev.filter(c => c !== category)
-        : [...prev, category]
+    setExpandedCategories((prev) =>
+      prev.includes(category) ? prev.filter((item) => item !== category) : [...prev, category]
     );
   };
 
@@ -26,47 +24,40 @@ export function Sidebar({ className = '' }: SidebarProps) {
       items: [
         { title: 'Introduction', path: '/docs/introduction', icon: BookOpen },
         { title: 'Authentication', path: '/docs/authentication', icon: Key },
-        { title: 'API Keys', path: '/docs/api-keys', icon: Key }
+        { title: 'API Keys', path: '/docs/api-keys', icon: Key },
+        { title: 'Testing', path: '/docs/testing', icon: FlaskConical }
       ]
     }
   ];
 
-  const categoryIcons: Record<string, any> = {
-    'Payments API': CreditCard,
-    'Transfers API': Send,
-    'Bill Payments API': Receipt,
-    'AutoReg API': Zap
-  };
-
-  const getCategoryEndpoints = (category: string) => {
-    return apiEndpoints.filter(e => e.category === category);
+  const categoryIcons: Record<string, typeof Sparkles> = {
+    'SDK Basics': Sparkles,
+    'Framework Guides': FileText
   };
 
   return (
-    <aside className={`w-64 border-r border-border bg-background flex-shrink-0 ${className}`}>
-      <ScrollArea className="h-[calc(100vh-4rem)] py-6 px-4">
+    <aside className={`w-64 flex-shrink-0 border-r border-border bg-background ${className}`}>
+      <ScrollArea className="h-[calc(100vh-4rem)] px-4 py-6">
         <nav className="space-y-6">
-          {/* Getting Started */}
-          {navigationItems.map((section, idx) => (
-            <div key={idx}>
-              <h4 className="mb-2 px-2 text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+          {navigationItems.map((section) => (
+            <div key={section.title}>
+              <h4 className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 {section.title}
               </h4>
               <div className="space-y-1">
                 {section.items.map((item) => {
                   const Icon = item.icon;
                   const isActive = location.pathname === item.path;
+
                   return (
                     <Link
                       key={item.path}
                       to={item.path}
-                      className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors ${
-                        isActive
-                          ? 'bg-[#FF8000]/10 text-[#FF8000] font-medium'
-                          : 'text-foreground hover:bg-muted'
+                      className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors ${
+                        isActive ? 'bg-[#FF8000]/10 font-medium text-[#FF8000]' : 'text-foreground hover:bg-muted'
                       }`}
                     >
-                      <Icon className="w-4 h-4" />
+                      <Icon className="h-4 w-4" />
                       {item.title}
                     </Link>
                   );
@@ -75,27 +66,22 @@ export function Sidebar({ className = '' }: SidebarProps) {
             </div>
           ))}
 
-          {/* API Categories */}
           {categories.map((category) => {
             const Icon = categoryIcons[category] || FileText;
             const isExpanded = expandedCategories.includes(category);
-            const endpoints = getCategoryEndpoints(category);
+            const endpoints = apiEndpoints.filter((endpoint) => endpoint.category === category);
 
             return (
               <div key={category}>
                 <button
                   onClick={() => toggleCategory(category)}
-                  className="w-full flex items-center justify-between px-2 py-2 text-xs uppercase tracking-wider text-muted-foreground font-semibold hover:text-foreground transition-colors"
+                  className="flex w-full items-center justify-between px-2 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <div className="flex items-center gap-2">
-                    <Icon className="w-4 h-4" />
+                    <Icon className="h-4 w-4" />
                     {category}
                   </div>
-                  {isExpanded ? (
-                    <ChevronDown className="w-3 h-3" />
-                  ) : (
-                    <ChevronRight className="w-3 h-3" />
-                  )}
+                  {isExpanded ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
                 </button>
 
                 {isExpanded && (
@@ -106,10 +92,8 @@ export function Sidebar({ className = '' }: SidebarProps) {
                         <Link
                           key={endpoint.id}
                           to={`/docs/${endpoint.id}`}
-                          className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
-                            isActive
-                              ? 'bg-[#FF8000]/10 text-[#FF8000] font-medium'
-                              : 'text-foreground hover:bg-muted'
+                          className={`block rounded-lg px-3 py-2 text-sm transition-colors ${
+                            isActive ? 'bg-[#FF8000]/10 font-medium text-[#FF8000]' : 'text-foreground hover:bg-muted'
                           }`}
                         >
                           {endpoint.title}
@@ -122,38 +106,28 @@ export function Sidebar({ className = '' }: SidebarProps) {
             );
           })}
 
-          {/* Additional Resources */}
           <div>
-            <h4 className="mb-2 px-2 text-xs uppercase tracking-wider text-muted-foreground font-semibold">
-              Resources
-            </h4>
+            <h4 className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Resources</h4>
             <div className="space-y-1">
               <Link
-                to="/docs/webhooks"
-                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-foreground hover:bg-muted transition-colors"
+                to="/docs/faq"
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-foreground transition-colors hover:bg-muted"
               >
-                <Webhook className="w-4 h-4" />
-                Webhooks
+                <CircleHelp className="h-4 w-4" />
+                FAQ
               </Link>
               <Link
                 to="/docs/error-codes"
-                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-foreground hover:bg-muted transition-colors"
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-foreground transition-colors hover:bg-muted"
               >
-                <AlertCircle className="w-4 h-4" />
+                <AlertCircle className="h-4 w-4" />
                 Error Codes
               </Link>
               <Link
-                to="/docs/sdks"
-                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-foreground hover:bg-muted transition-colors"
-              >
-                <Package className="w-4 h-4" />
-                SDKs
-              </Link>
-              <Link
                 to="/docs/changelog"
-                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-foreground hover:bg-muted transition-colors"
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-foreground transition-colors hover:bg-muted"
               >
-                <Clock className="w-4 h-4" />
+                <Clock className="h-4 w-4" />
                 Changelog
               </Link>
             </div>

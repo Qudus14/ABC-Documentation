@@ -8,13 +8,20 @@ interface CodeExamplesProps {
 }
 
 export function CodeExamples({ examples }: CodeExamplesProps) {
-  const languages = [
-    { key: 'curl', label: 'cURL', value: examples.curl },
-    { key: 'javascript', label: 'JavaScript', value: examples.javascript },
-    { key: 'flutter', label: 'Flutter', value: examples.flutter },
-    { key: 'python', label: 'Python', value: examples.python },
-    { key: 'php', label: 'PHP', value: examples.php }
-  ].filter(lang => lang.value);
+  const languages = examples.snippets?.length
+    ? examples.snippets.map((snippet) => ({
+        key: snippet.id,
+        label: snippet.label,
+        value: snippet.code,
+        language: snippet.language
+      }))
+    : [
+        { key: 'curl', label: 'cURL', value: examples.curl, language: 'bash' },
+        { key: 'javascript', label: 'JavaScript', value: examples.javascript, language: 'javascript' },
+        { key: 'flutter', label: 'Flutter', value: examples.flutter, language: 'dart' },
+        { key: 'python', label: 'Python', value: examples.python, language: 'python' },
+        { key: 'php', label: 'PHP', value: examples.php, language: 'php' }
+      ].filter((lang) => lang.value);
 
   return (
     <Tabs defaultValue={languages[0]?.key} className="w-full">
@@ -31,7 +38,7 @@ export function CodeExamples({ examples }: CodeExamplesProps) {
       </TabsList>
       {languages.map(lang => (
         <TabsContent key={lang.key} value={lang.key} className="mt-0">
-          <CodeBlock code={lang.value || ''} language={lang.key} />
+          <CodeBlock code={lang.value || ''} language={lang.language} />
         </TabsContent>
       ))}
     </Tabs>

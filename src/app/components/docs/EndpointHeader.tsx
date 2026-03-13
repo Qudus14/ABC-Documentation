@@ -1,20 +1,21 @@
 import { useState } from 'react';
-import { Copy, Link2 } from 'lucide-react';
+import { Copy } from 'lucide-react';
 import { MethodBadge } from './MethodBadge';
+import { ApiMethod } from '../../data/apiEndpoints';
 
 interface EndpointHeaderProps {
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+  method: ApiMethod;
   route: string;
   title: string;
   description: string;
+  copyValue?: string;
 }
 
-export function EndpointHeader({ method, route, title, description }: EndpointHeaderProps) {
+export function EndpointHeader({ method, route, title, description, copyValue }: EndpointHeaderProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopyUrl = () => {
-    const fullUrl = `https://api.egolapay.com${route}`;
-    navigator.clipboard.writeText(fullUrl);
+    navigator.clipboard.writeText(copyValue || route);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -26,12 +27,12 @@ export function EndpointHeader({ method, route, title, description }: EndpointHe
           <h1 className="mb-2">{title}</h1>
           <p className="text-muted-foreground">{description}</p>
         </div>
-        <button 
+        <button
           onClick={handleCopyUrl}
           className="p-2 hover:bg-muted rounded-lg transition-colors"
-          title="Copy link"
+          title="Copy reference"
         >
-          <Link2 className="w-4 h-4" />
+          <Copy className="w-4 h-4" />
         </button>
       </div>
 

@@ -25,6 +25,7 @@ export default function EndpointPage() {
           route={endpoint.route}
           title={endpoint.title}
           description={endpoint.description}
+          copyValue={endpoint.copyValue}
         />
 
         {/* Deprecation Warning */}
@@ -45,7 +46,7 @@ export default function EndpointPage() {
         {/* Request Headers */}
         {endpoint.requestHeaders && endpoint.requestHeaders.length > 0 && (
           <section id="request-headers">
-            <h2>Request Headers</h2>
+            <h2>{endpoint.requestHeadersTitle || 'Request Headers'}</h2>
             <ParameterTable parameters={endpoint.requestHeaders} />
           </section>
         )}
@@ -53,7 +54,7 @@ export default function EndpointPage() {
         {/* Request Parameters */}
         {endpoint.requestParameters && endpoint.requestParameters.length > 0 && (
           <section id="request-parameters">
-            <h2>Request Parameters</h2>
+            <h2>{endpoint.requestParametersTitle || 'Request Parameters'}</h2>
             <ParameterTable parameters={endpoint.requestParameters} />
           </section>
         )}
@@ -61,27 +62,37 @@ export default function EndpointPage() {
         {/* Request Body Example */}
         {endpoint.sampleRequest && (
           <section id="request-body">
-            <h2>Request Body</h2>
-            <ResponseCard title="Example Request" response={endpoint.sampleRequest} />
+            <h2>{endpoint.sampleRequestTitle || 'Request Body'}</h2>
+            <ResponseCard
+              title={endpoint.sampleRequestTitle || 'Example Request'}
+              response={endpoint.sampleRequest}
+              language={endpoint.sampleRequestLanguage || 'json'}
+            />
           </section>
         )}
 
         {/* Code Examples */}
         <section id="code-examples">
-          <h2>Code Examples</h2>
+          <h2>{endpoint.codeExamplesTitle || 'Code Examples'}</h2>
           <CodeExamples examples={endpoint.codeExamples} />
         </section>
 
         {/* Response Example */}
-        <section id="response">
-          <h2>Response</h2>
-          <ResponseCard title="Success Response (200)" response={endpoint.sampleResponse} />
-        </section>
+        {endpoint.sampleResponse && (
+          <section id="response">
+            <h2>{endpoint.sampleResponseTitle || 'Response'}</h2>
+            <ResponseCard
+              title={endpoint.sampleResponseTitle || 'Success Response'}
+              response={endpoint.sampleResponse}
+              language={endpoint.sampleResponseLanguage || 'json'}
+            />
+          </section>
+        )}
 
         {/* Error Responses */}
         {endpoint.errorResponses && endpoint.errorResponses.length > 0 && (
           <section id="error-responses">
-            <h2>Error Responses</h2>
+            <h2>{endpoint.errorResponsesTitle || 'Error Responses'}</h2>
             <div className="space-y-4">
               {endpoint.errorResponses.map((error, index) => (
                 <div key={index} className="p-4 rounded-xl border border-border bg-card">

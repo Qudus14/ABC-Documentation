@@ -1,127 +1,113 @@
 import { DocLayout } from '../components/layout/DocLayout';
-import { Database, ArrowRight, Code, FileText } from 'lucide-react';
+import { KeyRound, LifeBuoy, ShieldCheck } from 'lucide-react';
 import { CodeBlock } from '../components/docs/CodeBlock';
+import { InfoBox } from '../components/docs/InfoBox';
 
 export default function ApiKeysPage() {
-  const schemaExample = `interface ApiEndpoint {
-  id: string;
-  category: string;
-  title: string;
-  description: string;
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
-  route: string;
-  authenticationRequired: boolean;
-  requestParameters?: Parameter[];
-  sampleRequest?: string;
-  sampleResponse: string;
-  codeExamples: {
-    curl?: string;
-    javascript?: string;
-    flutter?: string;
-    python?: string;
-    php?: string;
-  };
-  playgroundEnabled?: boolean;
-}`;
-
   return (
     <DocLayout>
       <div className="space-y-8">
         <div>
-          <h1>API Keys & Schema-Driven Architecture</h1>
+          <h1>API Keys & Support</h1>
           <p className="text-lg text-muted-foreground mt-2">
-            Understanding how Egolapay's documentation system works and how to manage your API keys.
+            Everything you need before moving from sandbox checkout to production checkout.
           </p>
         </div>
 
-        <section id="schema-driven">
-          <h2>Schema-Driven Documentation</h2>
+        <section id="get-keys">
+          <h2>Get Your Keys</h2>
           <p className="text-muted-foreground mb-6">
-            This documentation platform is powered by a structured endpoint model. Every page you see 
-            is automatically generated from a single data structure, making it easy to maintain and scale.
+            Retrieve your credentials from the EgolePay dashboard:
           </p>
-
-          {/* Visual Diagram */}
-          <div className="rounded-xl border border-border bg-card p-8 mb-6">
-            <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-              <div className="flex flex-col items-center gap-2">
-                <div className="w-16 h-16 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                  <Database className="w-8 h-8 text-blue-500" />
-                </div>
-                <span className="text-sm font-medium">Data Model</span>
-              </div>
-
-              <ArrowRight className="w-6 h-6 text-muted-foreground rotate-90 md:rotate-0" />
-
-              <div className="flex flex-col items-center gap-2">
-                <div className="w-16 h-16 rounded-xl bg-green-500/10 flex items-center justify-center">
-                  <Code className="w-8 h-8 text-green-500" />
-                </div>
-                <span className="text-sm font-medium">Renderer</span>
-              </div>
-
-              <ArrowRight className="w-6 h-6 text-muted-foreground rotate-90 md:rotate-0" />
-
-              <div className="flex flex-col items-center gap-2">
-                <div className="w-16 h-16 rounded-xl bg-purple-500/10 flex items-center justify-center">
-                  <FileText className="w-8 h-8 text-purple-500" />
-                </div>
-                <span className="text-sm font-medium">Documentation</span>
-              </div>
-            </div>
-
-            <p className="text-center text-sm text-muted-foreground mt-6">
-              Adding a new endpoint only requires updating the data structure
-            </p>
-          </div>
-
-          <div className="space-y-4">
-            <h3 id="endpoint-schema">Endpoint Schema Structure</h3>
-            <CodeBlock code={schemaExample} language="typescript" />
-          </div>
-        </section>
-
-        <section id="benefits">
-          <h2>Benefits of Schema-Driven Approach</h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="p-4 rounded-xl border border-border bg-card">
-              <h3 id="consistency" className="text-base mb-2">Consistency</h3>
-              <p className="text-sm text-muted-foreground">
-                All endpoints follow the same structure and presentation format
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="rounded-2xl border border-border bg-card p-5">
+              <KeyRound className="h-5 w-5 text-[#FF8000]" />
+              <h3 id="dashboard-step-1" className="mt-3">1. Sign in</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Open your merchant dashboard at dashboard.egolepay.com.
               </p>
             </div>
-            <div className="p-4 rounded-xl border border-border bg-card">
-              <h3 id="maintainability" className="text-base mb-2">Maintainability</h3>
-              <p className="text-sm text-muted-foreground">
-                Update once, reflect everywhere. No duplicate code or content
+            <div className="rounded-2xl border border-border bg-card p-5">
+              <ShieldCheck className="h-5 w-5 text-[#FF8000]" />
+              <h3 id="dashboard-step-2" className="mt-3">2. Open API Keys</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Navigate to Settings and then API Keys to reveal your current test and live values.
               </p>
             </div>
-            <div className="p-4 rounded-xl border border-border bg-card">
-              <h3 id="scalability" className="text-base mb-2">Scalability</h3>
-              <p className="text-sm text-muted-foreground">
-                Easily scale to 100+ endpoints without redesigning
-              </p>
-            </div>
-            <div className="p-4 rounded-xl border border-border bg-card">
-              <h3 id="auto-generation" className="text-base mb-2">Auto-Generation</h3>
-              <p className="text-sm text-muted-foreground">
-                Sidebar, TOC, and playground are automatically generated
+            <div className="rounded-2xl border border-border bg-card p-5">
+              <LifeBuoy className="h-5 w-5 text-[#FF8000]" />
+              <h3 id="dashboard-step-3" className="mt-3">3. Rotate if needed</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Generate a fresh key whenever you rotate credentials or onboard a new environment.
               </p>
             </div>
           </div>
         </section>
 
-        <section id="managing-keys">
-          <h2>Managing Your API Keys</h2>
+        <section id="test-key">
+          <h2>Sandbox Credential</h2>
           <p className="text-muted-foreground mb-4">
-            To get started with the Egolapay API, you'll need to generate your API keys 
-            from the dashboard. Follow the steps in the{' '}
-            <a href="/docs/authentication" className="text-[#FF8000] hover:underline">
-              Authentication
-            </a>{' '}
-            guide to learn more.
+            Use this test key while validating the integration:
           </p>
+          <CodeBlock
+            code={`sk_test_VRXD_9fA3KQWm2E8LxR7HcD0PZB6JtN4YV5S1`}
+            language="bash"
+          />
         </section>
+
+        <section id="production-checklist">
+          <h2>Go-Live Checklist</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="rounded-2xl border border-border bg-card p-5">
+              <h3 id="check-test-cards">Validate test cards</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Confirm success, OTP, invalid PIN, insufficient funds, and expired card scenarios in sandbox.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-border bg-card p-5">
+              <h3 id="check-callbacks">Handle callbacks</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Ensure your success, error, close, and cancel handlers all update your product flow correctly.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-border bg-card p-5">
+              <h3 id="check-reference">Set references</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Add a custom reference for order reconciliation where your product needs one.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-border bg-card p-5">
+              <h3 id="check-live-key">Swap the key</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Replace <code>sk_test_</code> with <code>sk_live_</code> in the final deployment configuration.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="support">
+          <h2>Support Channels</h2>
+          <div className="rounded-2xl border border-border bg-card p-6">
+            <div className="grid gap-3 text-sm md:grid-cols-2">
+              <a href="mailto:api-support@egolepay.com" className="rounded-xl border border-border px-4 py-3 transition-colors hover:bg-muted/40">
+                Email: api-support@egolepay.com
+              </a>
+              <a href="https://docs.egolepay.com" target="_blank" rel="noreferrer" className="rounded-xl border border-border px-4 py-3 transition-colors hover:bg-muted/40">
+                Documentation: docs.egolepay.com
+              </a>
+              <a href="https://dashboard.egolepay.com" target="_blank" rel="noreferrer" className="rounded-xl border border-border px-4 py-3 transition-colors hover:bg-muted/40">
+                Dashboard: dashboard.egolepay.com
+              </a>
+              <a href="https://status.egolepay.com" target="_blank" rel="noreferrer" className="rounded-xl border border-border px-4 py-3 transition-colors hover:bg-muted/40">
+                Status Page: status.egolepay.com
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <InfoBox type="info" title="Need more examples?">
+          React, Vue, and Angular implementation samples are available under the Framework Guides section in the sidebar.
+        </InfoBox>
       </div>
     </DocLayout>
   );

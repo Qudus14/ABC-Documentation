@@ -1,93 +1,77 @@
 import { DocLayout } from '../components/layout/DocLayout';
 import { InfoBox } from '../components/docs/InfoBox';
 import { CodeBlock } from '../components/docs/CodeBlock';
-import { Key, Eye, EyeOff } from 'lucide-react';
+import { Key } from 'lucide-react';
 
 export default function AuthenticationPage() {
   return (
     <DocLayout>
       <div className="space-y-8">
         <div>
-          <h1>Authentication</h1>
+          <h1>Authentication & Environment Detection</h1>
           <p className="text-lg text-muted-foreground mt-2">
-            Learn how to authenticate your API requests using Egolapay API keys.
+            The JavaScript SDK chooses the correct environment from the API key you provide. No extra base URL configuration is required.
           </p>
         </div>
 
         <section id="api-keys">
           <h2>API Keys</h2>
           <p className="text-muted-foreground mb-4">
-            Egolapay uses API keys to authenticate requests. You'll receive two types of keys:
+            EgolePay currently documents two SDK key prefixes:
           </p>
           
           <div className="grid gap-4 md:grid-cols-2 mb-6">
             <div className="p-4 rounded-xl border border-border bg-card">
               <div className="flex items-center gap-2 mb-2">
                 <Key className="w-5 h-5 text-green-500" />
-                <h3 id="public-key" className="text-base">Public Key</h3>
+                <h3 id="test-key" className="text-base">Test Key</h3>
               </div>
               <p className="text-sm text-muted-foreground">
-                Used for client-side operations. Safe to include in your frontend code.
+                Used during sandbox testing. No real money is processed.
               </p>
               <code className="text-xs text-green-600 dark:text-green-400 mt-2 block">
-                pk_test_xxxxxxxxxx
+                sk_test_xxxxxxxxxx
               </code>
             </div>
 
             <div className="p-4 rounded-xl border border-border bg-card">
               <div className="flex items-center gap-2 mb-2">
                 <Key className="w-5 h-5 text-red-500" />
-                <h3 id="secret-key" className="text-base">Secret Key</h3>
+                <h3 id="live-key" className="text-base">Live Key</h3>
               </div>
               <p className="text-sm text-muted-foreground">
-                Used for server-side operations. Keep this secure and never expose it.
+                Used for production traffic after your checkout flow has been validated in test mode.
               </p>
               <code className="text-xs text-red-600 dark:text-red-400 mt-2 block">
-                sk_test_xxxxxxxxxx
+                sk_live_xxxxxxxxxx
               </code>
             </div>
           </div>
 
-          <InfoBox type="warning" title="Security Warning">
-            Never expose your secret key in client-side code, public repositories, or any publicly 
-            accessible location. Always use environment variables and secure storage.
+          <InfoBox type="warning" title="Deployment Note">
+            Keep your production key in your deployment configuration and rotate it from the dashboard whenever you suspect compromise or complete a security review.
           </InfoBox>
         </section>
 
-        <section id="bearer-token">
-          <h2>Using Bearer Token</h2>
+        <section id="sdk-authentication">
+          <h2>Using the Key in the SDK</h2>
           <p className="text-muted-foreground mb-4">
-            Include your secret key in the Authorization header as a Bearer token:
+            Pass your EgolePay key directly into the checkout configuration:
           </p>
           <CodeBlock 
-            code={`curl -X POST https://api.egolapay.com/api/v1/transactions/initialize \\
-  -H "Authorization: Bearer sk_test_your_secret_key_here" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "email": "customer@example.com",
-    "amount": 50000
-  }'`}
-            language="bash"
+            code={`new EgolePay({
+  apiKey: 'sk_test_your_key_here',
+  amount: 5000,
+  email: 'customer@example.com'
+});`}
+            language="javascript"
           />
         </section>
 
-        <section id="generate-keys">
-          <h2>How to Generate API Keys</h2>
-          <div className="space-y-4 text-muted-foreground">
-            <ol className="list-decimal list-inside space-y-2">
-              <li>Log in to your <a href="#" className="text-[#FF8000] hover:underline">Egolapay Dashboard</a></li>
-              <li>Navigate to Settings → API Keys</li>
-              <li>Click "Generate New Key"</li>
-              <li>Copy and securely store your keys</li>
-              <li>Use test keys for development and live keys for production</li>
-            </ol>
-          </div>
-        </section>
-
         <section id="environments">
-          <h2>Test vs Live Keys</h2>
+          <h2>Automatic Environment Detection</h2>
           <p className="text-muted-foreground mb-4">
-            Egolapay provides separate keys for testing and production:
+            The SDK picks the correct backend automatically from the key prefix.
           </p>
           
           <div className="rounded-xl border border-border overflow-hidden">
@@ -96,32 +80,42 @@ export default function AuthenticationPage() {
                 <tr>
                   <th className="px-4 py-3 text-left text-sm font-medium">Environment</th>
                   <th className="px-4 py-3 text-left text-sm font-medium">Prefix</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium">Purpose</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium">Base URL</th>
                 </tr>
               </thead>
               <tbody>
                 <tr className="border-t border-border">
                   <td className="px-4 py-3 font-medium">Test</td>
                   <td className="px-4 py-3 font-mono text-sm">sk_test_</td>
-                  <td className="px-4 py-3 text-sm text-muted-foreground">
-                    For development and testing. No real money is processed.
-                  </td>
+                  <td className="px-4 py-3 text-sm text-muted-foreground">https://stageapi.egolepay.com</td>
                 </tr>
                 <tr className="border-t border-border">
                   <td className="px-4 py-3 font-medium">Live</td>
                   <td className="px-4 py-3 font-mono text-sm">sk_live_</td>
-                  <td className="px-4 py-3 text-sm text-muted-foreground">
-                    For production. Real transactions are processed.
-                  </td>
+                  <td className="px-4 py-3 text-sm text-muted-foreground">https://api.egolepay.com</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </section>
 
-        <InfoBox type="info" title="Best Practice">
-          Always test your integration thoroughly using test keys before switching to live keys 
-          in production. This ensures your integration works correctly without risking real transactions.
+        <section id="switching-live">
+          <h2>Switching to Live</h2>
+          <p className="text-muted-foreground mb-4">
+            Moving to production is intentionally simple:
+          </p>
+          <CodeBlock
+            code={`// Sandbox
+apiKey: 'sk_test_xxxxxxxxxx'
+
+// Production
+apiKey: 'sk_live_xxxxxxxxxx'`}
+            language="javascript"
+          />
+        </section>
+
+        <InfoBox type="info" title="No Additional Configuration Needed">
+          Once you replace the key prefix, the SDK routes requests to the correct EgolePay environment automatically.
         </InfoBox>
       </div>
     </DocLayout>

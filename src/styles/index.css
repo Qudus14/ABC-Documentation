@@ -5,6 +5,10 @@
 /* Smooth scrolling for anchor links */
 html {
   scroll-behavior: smooth;
+  background:
+    radial-gradient(circle at top left, rgba(255, 210, 77, 0.1), transparent 22%),
+    radial-gradient(circle at top right, rgba(255, 128, 0, 0.08), transparent 20%),
+    var(--color-background);
 }
 
 /* Code block improvements */
@@ -27,6 +31,10 @@ pre {
 .doc-content h3 {
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
+}
+
+.doc-content h1 {
+  letter-spacing: -0.03em;
 }
 
 /* Custom scrollbar */

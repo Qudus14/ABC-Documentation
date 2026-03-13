@@ -13,7 +13,7 @@ interface HeaderProps {
 export function Header({ onMenuClick }: HeaderProps) {
   const { theme, toggleTheme } = useTheme();
   const [searchOpen, setSearchOpen] = useState(false);
-  const [version, setVersion] = useState('v1');
+  const version = 'JS SDK';
 
   return (
     <>
@@ -31,12 +31,16 @@ export function Header({ onMenuClick }: HeaderProps) {
             </Button>
             
             <Link to="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#FFD24D] via-[#FF8000] to-[#FEAC01] flex items-center justify-center">
-                <span className="text-white font-bold text-sm">E</span>
+              <div className="flex h-8 w-8 items-center justify-center bg-transparent">
+                <img
+                  src="https://res.cloudinary.com/dl9m2dzgk/image/upload/v1725615117/egolepay_qmnlqw.png"
+                  alt="EgolePay"
+                  className="h-full w-full object-contain"
+                />
               </div>
-              <span className="font-semibold text-lg hidden sm:inline">Egolapay</span>
-              <span className="text-xs px-2 py-1 rounded-md bg-muted text-muted-foreground hidden sm:inline">
-                Docs
+              <span className="font-semibold text-lg hidden sm:inline">EgolePay</span>
+              <span className="text-xs px-2 py-1 rounded-full border border-border bg-[#FFF3DB] text-[#B86400] hidden sm:inline dark:bg-[#2D2417] dark:text-[#FFD08A]">
+                SDK Docs
               </span>
             </Link>
           </div>
@@ -70,7 +74,7 @@ export function Header({ onMenuClick }: HeaderProps) {
               className="hidden md:flex items-center gap-1"
               asChild
             >
-              <a href="#" target="_blank" rel="noopener noreferrer">
+              <a href="https://status.egolepay.com" target="_blank" rel="noopener noreferrer">
                 <div className="w-2 h-2 rounded-full bg-green-500" />
                 Status
               </a>
@@ -97,7 +101,7 @@ export function Header({ onMenuClick }: HeaderProps) {
               className="rounded-lg hidden sm:flex"
               asChild
             >
-              <a href="#" target="_blank" rel="noopener noreferrer">
+              <a href="https://dashboard.egolepay.com" target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="w-4 h-4" />
               </a>
             </Button>

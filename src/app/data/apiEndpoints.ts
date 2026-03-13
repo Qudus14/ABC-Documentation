@@ -1,9 +1,19 @@
+export type ApiMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'SDK' | 'GUIDE' | 'EVENT';
+
+export interface CodeSnippet {
+  id: string;
+  label: string;
+  language: string;
+  code: string;
+}
+
 export interface CodeExample {
   curl?: string;
   javascript?: string;
   flutter?: string;
   python?: string;
   php?: string;
+  snippets?: CodeSnippet[];
 }
 
 export interface Parameter {
@@ -24,16 +34,24 @@ export interface ApiEndpoint {
   category: string;
   title: string;
   description: string;
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+  method: ApiMethod;
   route: string;
+  copyValue?: string;
   authenticationRequired: boolean;
   requestHeaders?: Parameter[];
+  requestHeadersTitle?: string;
   requestParameters?: Parameter[];
-  requestBody?: string;
+  requestParametersTitle?: string;
   sampleRequest?: string;
-  sampleResponse: string;
+  sampleRequestTitle?: string;
+  sampleRequestLanguage?: string;
+  sampleResponse?: string;
+  sampleResponseTitle?: string;
+  sampleResponseLanguage?: string;
   errorResponses?: ErrorResponse[];
+  errorResponsesTitle?: string;
   codeExamples: CodeExample;
+  codeExamplesTitle?: string;
   version: string;
   deprecated?: boolean;
   playgroundEnabled?: boolean;
@@ -41,634 +59,520 @@ export interface ApiEndpoint {
 
 export const apiEndpoints: ApiEndpoint[] = [
   {
-    id: 'initialize-transaction',
-    category: 'Payments API',
-    title: 'Initialize Transaction',
-    description: 'Initialize a new payment transaction and get an authorization URL to redirect your customer to complete payment.',
-    method: 'POST',
-    route: '/api/v1/transactions/initialize',
-    authenticationRequired: true,
+    id: 'include-sdk',
+    category: 'SDK Basics',
+    title: 'Include SDK',
+    description: 'Load the hosted EgolePay checkout script on any page where you want to open the payment modal.',
+    method: 'SDK',
+    route: '<script src="https://api.egolepay.com/v1/sdk.js"></script>',
+    copyValue: '<script src="https://api.egolepay.com/v1/sdk.js"></script>',
+    authenticationRequired: false,
+    requestHeadersTitle: 'SDK Details',
     requestHeaders: [
-      { name: 'Authorization', type: 'string', required: true, description: 'Bearer {your_secret_key}' },
-      { name: 'Content-Type', type: 'string', required: true, description: 'application/json' }
+      {
+        name: 'Script URL',
+        type: 'string',
+        required: true,
+        description: 'Hosted JavaScript bundle that exposes the EgolePay checkout constructor.'
+      },
+      {
+        name: 'Global object',
+        type: 'window.EgolePay',
+        required: true,
+        description: 'Constructor available after the script loads and ready to be used in browser code.'
+      }
     ],
-    requestParameters: [
-      { name: 'email', type: 'string', required: true, description: 'Customer\'s email address' },
-      { name: 'amount', type: 'number', required: true, description: 'Amount in kobo (NGN)' },
-      { name: 'reference', type: 'string', required: false, description: 'Unique transaction reference (auto-generated if not provided)' },
-      { name: 'callback_url', type: 'string', required: false, description: 'URL to redirect customer after payment' },
-      { name: 'metadata', type: 'object', required: false, description: 'Additional transaction data' }
-    ],
-    sampleRequest: `{
-  "email": "customer@example.com",
-  "amount": 50000,
-  "callback_url": "https://yoursite.com/callback",
-  "metadata": {
-    "customer_name": "John Doe",
-    "order_id": "ORD-12345"
+    sampleRequestTitle: 'Embed Example',
+    sampleRequestLanguage: 'html',
+    sampleRequest: `<script src="https://api.egolepay.com/v1/sdk.js"></script>
+
+<button onclick="startPayment()">Pay Now</button>
+
+<script>
+  function startPayment() {
+    new EgolePay({
+      apiKey: 'sk_test_xxxxxxxxxxxxxxxx',
+      amount: 5000,
+      email: 'customer@example.com'
+    });
   }
-}`,
-    sampleResponse: `{
-  "status": "success",
-  "message": "Transaction initialized successfully",
-  "data": {
-    "authorization_url": "https://checkout.egolapay.com/tx_abc123",
-    "access_code": "tx_abc123",
-    "reference": "ref_xyz789"
-  }
-}`,
-    errorResponses: [
-      { code: '400', message: 'Bad Request', description: 'Invalid parameters provided' },
-      { code: '401', message: 'Unauthorized', description: 'Invalid or missing API key' }
-    ],
+</script>`,
+    codeExamplesTitle: 'Loading Patterns',
     codeExamples: {
-      curl: `curl -X POST https://api.egolapay.com/api/v1/transactions/initialize \\
-  -H "Authorization: Bearer YOUR_SECRET_KEY" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "email": "customer@example.com",
-    "amount": 50000
-  }'`,
-      javascript: `const response = await fetch('https://api.egolapay.com/api/v1/transactions/initialize', {
-  method: 'POST',
-  headers: {
-    'Authorization': 'Bearer YOUR_SECRET_KEY',
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    email: 'customer@example.com',
-    amount: 50000
-  })
-});
+      snippets: [
+        {
+          id: 'standard-html',
+          label: 'HTML Page',
+          language: 'html',
+          code: `<script src="https://api.egolepay.com/v1/sdk.js"></script>
 
-const data = await response.json();
-console.log(data);`,
-      flutter: `import 'package:http/http.dart' as http;
-import 'dart:convert';
+<button onclick="startPayment()">Pay Now</button>
 
-Future<void> initializeTransaction() async {
-  final response = await http.post(
-    Uri.parse('https://api.egolapay.com/api/v1/transactions/initialize'),
-    headers: {
-      'Authorization': 'Bearer YOUR_SECRET_KEY',
-      'Content-Type': 'application/json',
-    },
-    body: jsonEncode({
-      'email': 'customer@example.com',
-      'amount': 50000,
-    }),
-  );
-  
-  if (response.statusCode == 200) {
-    final data = jsonDecode(response.body);
-    print(data);
+<script>
+  function startPayment() {
+    new EgolePay({
+      apiKey: 'sk_test_xxxxxxxxxxxxxxxx',
+      amount: 5000,
+      email: 'customer@example.com'
+    });
   }
-}`,
-      python: `import requests
-import json
+</script>`
+        },
+        {
+          id: 'deferred-script',
+          label: 'Deferred Load',
+          language: 'html',
+          code: `<script defer src="https://api.egolepay.com/v1/sdk.js"></script>
 
-url = "https://api.egolapay.com/api/v1/transactions/initialize"
-headers = {
-    "Authorization": "Bearer YOUR_SECRET_KEY",
-    "Content-Type": "application/json"
-}
-payload = {
-    "email": "customer@example.com",
-    "amount": 50000
-}
+<button id="pay-button">Pay Now</button>
 
-response = requests.post(url, headers=headers, json=payload)
-data = response.json()
-print(data)`,
-      php: `<?php
-$url = "https://api.egolapay.com/api/v1/transactions/initialize";
-$data = array(
-    "email" => "customer@example.com",
-    "amount" => 50000
-);
-
-$ch = curl_init($url);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-    "Authorization: Bearer YOUR_SECRET_KEY",
-    "Content-Type: application/json"
-));
-
-$response = curl_exec($ch);
-curl_close($ch);
-$result = json_decode($response);
-print_r($result);
-?>`
+<script>
+  window.addEventListener('load', function () {
+    document.getElementById('pay-button').addEventListener('click', function () {
+      new EgolePay({
+        apiKey: 'sk_test_xxxxxxxxxxxxxxxx',
+        amount: 5000,
+        email: 'customer@example.com'
+      });
+    });
+  });
+</script>`
+        }
+      ]
     },
-    version: 'v1',
-    deprecated: false,
-    playgroundEnabled: true
+    version: 'v1.0.0'
   },
   {
-    id: 'verify-transaction',
-    category: 'Payments API',
-    title: 'Verify Transaction',
-    description: 'Verify the status of a transaction using the transaction reference.',
-    method: 'GET',
-    route: '/api/v1/transactions/verify/:reference',
-    authenticationRequired: true,
-    requestHeaders: [
-      { name: 'Authorization', type: 'string', required: true, description: 'Bearer {your_secret_key}' }
-    ],
+    id: 'initialize-payment',
+    category: 'SDK Basics',
+    title: 'Initialize Payment',
+    description: 'Create a checkout session by passing your API key, transaction details, and lifecycle callbacks into the EgolePay constructor.',
+    method: 'SDK',
+    route: 'new EgolePay(config)',
+    copyValue: `new EgolePay({
+  apiKey: 'sk_test_xxxxxxxxxxxxxxxx',
+  amount: 5000,
+  email: 'customer@example.com'
+})`,
+    authenticationRequired: false,
+    requestParametersTitle: 'Configuration Options',
     requestParameters: [
-      { name: 'reference', type: 'string', required: true, description: 'Transaction reference to verify' }
+      { name: 'apiKey', type: 'string', required: true, description: 'Your EgolePay API key. Use sk_test_ in sandbox and sk_live_ in production.' },
+      { name: 'amount', type: 'number', required: true, description: 'Amount in NGN. Minimum amount is N100.' },
+      { name: 'email', type: 'string', required: true, description: 'Customer email used for payment confirmation and transaction tracking.' },
+      { name: 'reference', type: 'string', required: false, description: 'Optional custom reference such as ORDER_12345 or INV_2024_001.' },
+      { name: 'customerName', type: 'string', required: false, description: 'Customer full name shown during checkout and available in your records.' },
+      { name: 'phone', type: 'string', required: false, description: 'Customer phone number in local or international format.' }
     ],
+    sampleRequestTitle: 'Default Checkout Example',
+    sampleRequestLanguage: 'javascript',
+    sampleRequest: `function startPayment() {
+  new EgolePay({
+    apiKey: 'sk_test_xxxxxxxxxxxxxxxx',
+    amount: 5000,
+    email: 'customer@example.com',
+    reference: 'ORDER_12345',
+    onSuccess: function (response) {
+      console.log('Payment successful!', response);
+      window.location.href = '/success?ref=' + response.transactionReference;
+    },
+    onError: function (error) {
+      console.error('Payment failed:', error);
+      alert(error.message);
+    },
+    onCancel: function () {
+      console.log('User cancelled payment');
+    }
+  });
+}`,
+    sampleResponseTitle: 'Success Payload',
+    sampleResponseLanguage: 'json',
     sampleResponse: `{
   "status": "success",
-  "message": "Transaction retrieved successfully",
-  "data": {
-    "reference": "ref_xyz789",
-    "amount": 50000,
-    "status": "success",
-    "paid_at": "2026-02-27T10:30:00Z",
-    "channel": "card",
-    "customer": {
-      "email": "customer@example.com"
+  "amount": 5000,
+  "transactionReference": "TXN_123456",
+  "paymentReference": "PAY_123456"
+}`,
+    codeExamplesTitle: 'Integration Examples',
+    codeExamples: {
+      snippets: [
+        {
+          id: 'basic-button',
+          label: 'Basic Button',
+          language: 'javascript',
+          code: `function pay() {
+  new EgolePay({
+    apiKey: 'sk_test_xxxxxxxxxx',
+    amount: 5000,
+    email: 'customer@example.com',
+    onSuccess: (res) => window.location.href = '/success',
+    onError: (err) => alert(err.message)
+  });
+}`
+        },
+        {
+          id: 'customer-details',
+          label: 'Customer Details',
+          language: 'javascript',
+          code: `new EgolePay({
+  apiKey: 'sk_test_xxxxxxxxxx',
+  amount: 10000,
+  email: 'john@example.com',
+  customerName: 'John Doe',
+  phone: '+2348012345678',
+  reference: 'INV_2024_001',
+  onSuccess: function (res) {
+    updateOrderStatus(res.transactionReference);
+    window.location.href = '/thank-you';
+  },
+  onError: function (err) {
+    showErrorToUser(err.message);
+  }
+});`
+        }
+      ]
     },
-    "metadata": {
-      "customer_name": "John Doe"
+    errorResponsesTitle: 'Common Failure States',
+    errorResponses: [
+      { code: 'INSUFFICIENT_FUNDS', message: 'Declined', description: 'Customer card does not have enough balance to complete the charge.' },
+      { code: 'INVALID_PIN', message: 'Declined', description: 'Incorrect PIN was submitted during card authentication.' },
+      { code: 'NETWORK_ERROR', message: 'Retry', description: 'The customer or merchant device lost connectivity during checkout.' }
+    ],
+    version: 'v1.0.0'
+  },
+  {
+    id: 'callback-events',
+    category: 'SDK Basics',
+    title: 'Callback Events',
+    description: 'Use EgolePay callbacks to react to successful payments, failures, modal closes, and user journey changes.',
+    method: 'EVENT',
+    route: 'onSuccess | onError | onCancel | onClose | onStepChange',
+    copyValue: `{
+  onSuccess(response) {},
+  onError(error) {},
+  onCancel() {},
+  onClose(info) {},
+  onStepChange(step) {}
+}`,
+    authenticationRequired: false,
+    requestParametersTitle: 'Available Callbacks',
+    requestParameters: [
+      { name: 'onSuccess(response)', type: 'function', required: false, description: 'Runs after a successful payment. The response contains status, amount, transactionReference, and paymentReference.' },
+      { name: 'onError(error)', type: 'function', required: false, description: 'Runs when a payment attempt fails and returns a message like Insufficient funds or Invalid PIN.' },
+      { name: 'onCancel()', type: 'function', required: false, description: 'Runs when the user cancels the payment flow before completion.' },
+      { name: 'onClose(info)', type: 'function', required: false, description: 'Runs when the modal closes and includes a reason such as USER_CLOSED or PAYMENT_SUCCESSFUL.' },
+      { name: 'onStepChange(step)', type: 'function', required: false, description: 'Runs whenever the customer moves between checkout steps. Useful for analytics and support diagnostics.' }
+    ],
+    sampleRequestTitle: 'Callback Configuration',
+    sampleRequestLanguage: 'javascript',
+    sampleRequest: `new EgolePay({
+  apiKey: 'sk_test_xxxxxxxxxx',
+  amount: 5000,
+  email: 'customer@example.com',
+  onSuccess: function (response) {
+    console.log(response);
+  },
+  onError: function (error) {
+    console.log(error.message);
+  },
+  onCancel: function () {
+    console.log('Payment cancelled');
+  },
+  onClose: function (info) {
+    console.log(info.reason);
+  },
+  onStepChange: function (step) {
+    console.log(step.currentStep);
+  }
+});`,
+    sampleResponseTitle: 'Example Success Response',
+    sampleResponseLanguage: 'json',
+    sampleResponse: `{
+  "status": "success",
+  "amount": 5000,
+  "transactionReference": "TXN_123456",
+  "paymentReference": "PAY_123456"
+}`,
+    codeExamplesTitle: 'Callback Handlers',
+    codeExamples: {
+      snippets: [
+        {
+          id: 'success-handler',
+          label: 'onSuccess',
+          language: 'javascript',
+          code: `onSuccess: function (response) {
+  console.log(response);
+  // {
+  //   "status": "success",
+  //   "amount": 5000,
+  //   "transactionReference": "TXN_123456",
+  //   "paymentReference": "PAY_123456"
+  // }
+}`
+        },
+        {
+          id: 'error-handler',
+          label: 'onError',
+          language: 'javascript',
+          code: `onError: function (error) {
+  console.log(error.message);
+  // "Insufficient funds" or "Invalid PIN"
+}`
+        },
+        {
+          id: 'close-handler',
+          label: 'onClose',
+          language: 'javascript',
+          code: `onClose: function (info) {
+  console.log(info.reason);
+  // "USER_CLOSED" or "PAYMENT_SUCCESSFUL"
+}`
+        },
+        {
+          id: 'step-handler',
+          label: 'onStepChange',
+          language: 'javascript',
+          code: `onStepChange: function (step) {
+  console.log(step.currentStep);
+  // "payment_options", "card_payment", and other checkout steps
+}`
+        }
+      ]
+    },
+    version: 'v1.0.0'
+  },
+  {
+    id: 'react-component',
+    category: 'Framework Guides',
+    title: 'React Component',
+    description: 'Wrap EgolePay checkout in a reusable React button that receives amount, email, and success handlers through props.',
+    method: 'GUIDE',
+    route: 'function PaymentButton({ amount, email, onSuccess })',
+    copyValue: 'function PaymentButton({ amount, email, onSuccess })',
+    authenticationRequired: false,
+    requestParametersTitle: 'Component Props',
+    requestParameters: [
+      { name: 'amount', type: 'number', required: true, description: 'Amount passed into the component and used for checkout.' },
+      { name: 'email', type: 'string', required: true, description: 'Customer email used in the EgolePay config.' },
+      { name: 'onSuccess', type: '(response) => void', required: true, description: 'Handler that receives the EgolePay success payload.' }
+    ],
+    sampleRequestTitle: 'React Example',
+    sampleRequestLanguage: 'jsx',
+    sampleRequest: `import React from 'react';
+
+function PaymentButton({ amount, email, onSuccess }) {
+  const handlePayment = () => {
+    new window.EgolePay({
+      apiKey: process.env.REACT_APP_EGOLEPAY_KEY,
+      amount,
+      email,
+      onSuccess
+    });
+  };
+
+  return (
+    <button onClick={handlePayment}>
+      Pay N{amount}
+    </button>
+  );
+}`,
+    sampleResponseTitle: 'Success Payload',
+    sampleResponseLanguage: 'json',
+    sampleResponse: `{
+  "status": "success",
+  "amount": 5000,
+  "transactionReference": "TXN_123456",
+  "paymentReference": "PAY_123456"
+}`,
+    codeExamplesTitle: 'Usage',
+    codeExamples: {
+      snippets: [
+        {
+          id: 'react-usage',
+          label: 'Parent Screen',
+          language: 'jsx',
+          code: `export function CheckoutPage() {
+  return (
+    <PaymentButton
+      amount={5000}
+      email="customer@example.com"
+      onSuccess={(response) => {
+        window.location.href = '/success?ref=' + response.transactionReference;
+      }}
+    />
+  );
+}`
+        }
+      ]
+    },
+    version: 'v1.0.0'
+  },
+  {
+    id: 'vue-component',
+    category: 'Framework Guides',
+    title: 'Vue Component',
+    description: 'Use a Vue component to manage loading state while forwarding success and error events to parent components.',
+    method: 'GUIDE',
+    route: 'methods.handlePayment()',
+    copyValue: 'methods.handlePayment()',
+    authenticationRequired: false,
+    requestParametersTitle: 'Component Inputs',
+    requestParameters: [
+      { name: 'amount', type: 'Number', required: true, description: 'Checkout amount rendered in the button and sent to EgolePay.' },
+      { name: 'email', type: 'String', required: true, description: 'Customer email passed into the SDK config.' },
+      { name: 'loading', type: 'Boolean', required: false, description: 'Component state that disables the button while checkout is in progress.' }
+    ],
+    sampleRequestTitle: 'Vue Example',
+    sampleRequestLanguage: 'html',
+    sampleRequest: `<template>
+  <button @click="handlePayment" :disabled="loading">
+    {{ loading ? 'Processing...' : \`Pay N\${amount}\` }}
+  </button>
+</template>
+
+<script>
+export default {
+  props: ['amount', 'email'],
+  data() {
+    return {
+      loading: false
+    };
+  },
+  methods: {
+    handlePayment() {
+      this.loading = true;
+
+      new window.EgolePay({
+        apiKey: process.env.VUE_APP_EGOLEPAY_KEY,
+        amount: this.amount,
+        email: this.email,
+        onSuccess: (response) => {
+          this.loading = false;
+          this.$emit('success', response);
+        },
+        onError: (error) => {
+          this.loading = false;
+          this.$emit('error', error);
+        }
+      });
     }
   }
-}`,
-    codeExamples: {
-      curl: `curl -X GET https://api.egolapay.com/api/v1/transactions/verify/ref_xyz789 \\
-  -H "Authorization: Bearer YOUR_SECRET_KEY"`,
-      javascript: `const reference = 'ref_xyz789';
-const response = await fetch(\`https://api.egolapay.com/api/v1/transactions/verify/\${reference}\`, {
-  method: 'GET',
-  headers: {
-    'Authorization': 'Bearer YOUR_SECRET_KEY'
-  }
-});
-
-const data = await response.json();
-console.log(data);`,
-      flutter: `import 'package:http/http.dart' as http;
-import 'dart:convert';
-
-Future<void> verifyTransaction(String reference) async {
-  final response = await http.get(
-    Uri.parse('https://api.egolapay.com/api/v1/transactions/verify/$reference'),
-    headers: {
-      'Authorization': 'Bearer YOUR_SECRET_KEY',
-    },
-  );
-  
-  if (response.statusCode == 200) {
-    final data = jsonDecode(response.body);
-    print(data);
-  }
-}`,
-      python: `import requests
-
-reference = "ref_xyz789"
-url = f"https://api.egolapay.com/api/v1/transactions/verify/{reference}"
-headers = {
-    "Authorization": "Bearer YOUR_SECRET_KEY"
-}
-
-response = requests.get(url, headers=headers)
-data = response.json()
-print(data)`,
-      php: `<?php
-$reference = "ref_xyz789";
-$url = "https://api.egolapay.com/api/v1/transactions/verify/" . $reference;
-
-$ch = curl_init($url);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-    "Authorization: Bearer YOUR_SECRET_KEY"
-));
-
-$response = curl_exec($ch);
-curl_close($ch);
-$result = json_decode($response);
-print_r($result);
-?>`
-    },
-    version: 'v1',
-    playgroundEnabled: true
-  },
-  {
-    id: 'create-transfer',
-    category: 'Transfers API',
-    title: 'Create Transfer',
-    description: 'Initiate a transfer to a bank account or mobile money.',
-    method: 'POST',
-    route: '/api/v1/transfers/create',
-    authenticationRequired: true,
-    requestHeaders: [
-      { name: 'Authorization', type: 'string', required: true, description: 'Bearer {your_secret_key}' },
-      { name: 'Content-Type', type: 'string', required: true, description: 'application/json' }
-    ],
-    requestParameters: [
-      { name: 'account_number', type: 'string', required: true, description: 'Recipient account number' },
-      { name: 'bank_code', type: 'string', required: true, description: 'Recipient bank code' },
-      { name: 'amount', type: 'number', required: true, description: 'Amount in kobo' },
-      { name: 'narration', type: 'string', required: false, description: 'Transfer description' },
-      { name: 'reference', type: 'string', required: false, description: 'Unique transfer reference' }
-    ],
-    sampleRequest: `{
-  "account_number": "0123456789",
-  "bank_code": "058",
-  "amount": 10000,
-  "narration": "Payment for services",
-  "reference": "transfer_ref_123"
-}`,
+};
+</script>`,
+    sampleResponseTitle: 'Success Payload',
+    sampleResponseLanguage: 'json',
     sampleResponse: `{
   "status": "success",
-  "message": "Transfer initiated successfully",
-  "data": {
-    "transfer_code": "TRF_abc123",
-    "reference": "transfer_ref_123",
-    "status": "pending",
-    "amount": 10000
-  }
+  "amount": 5000,
+  "transactionReference": "TXN_123456",
+  "paymentReference": "PAY_123456"
 }`,
+    codeExamplesTitle: 'Parent Listener',
     codeExamples: {
-      curl: `curl -X POST https://api.egolapay.com/api/v1/transfers/create \\
-  -H "Authorization: Bearer YOUR_SECRET_KEY" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "account_number": "0123456789",
-    "bank_code": "058",
-    "amount": 10000
-  }'`,
-      javascript: `const response = await fetch('https://api.egolapay.com/api/v1/transfers/create', {
-  method: 'POST',
-  headers: {
-    'Authorization': 'Bearer YOUR_SECRET_KEY',
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    account_number: '0123456789',
-    bank_code: '058',
-    amount: 10000
-  })
-});
-
-const data = await response.json();`,
-      flutter: `import 'package:http/http.dart' as http;
-import 'dart:convert';
-
-Future<void> createTransfer() async {
-  final response = await http.post(
-    Uri.parse('https://api.egolapay.com/api/v1/transfers/create'),
-    headers: {
-      'Authorization': 'Bearer YOUR_SECRET_KEY',
-      'Content-Type': 'application/json',
+      snippets: [
+        {
+          id: 'vue-parent',
+          label: 'Parent Usage',
+          language: 'html',
+          code: `<payment-button
+  :amount="5000"
+  email="customer@example.com"
+  @success="handleSuccess"
+  @error="handleError"
+/>`
+        }
+      ]
     },
-    body: jsonEncode({
-      'account_number': '0123456789',
-      'bank_code': '058',
-      'amount': 10000,
-    }),
-  );
-  
-  final data = jsonDecode(response.body);
-  print(data);
-}`,
-      python: `import requests
-
-url = "https://api.egolapay.com/api/v1/transfers/create"
-headers = {
-    "Authorization": "Bearer YOUR_SECRET_KEY",
-    "Content-Type": "application/json"
-}
-payload = {
-    "account_number": "0123456789",
-    "bank_code": "058",
-    "amount": 10000
-}
-
-response = requests.post(url, headers=headers, json=payload)
-print(response.json())`,
-      php: `<?php
-$url = "https://api.egolapay.com/api/v1/transfers/create";
-$data = array(
-    "account_number" => "0123456789",
-    "bank_code" => "058",
-    "amount" => 10000
-);
-
-$ch = curl_init($url);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-    "Authorization: Bearer YOUR_SECRET_KEY",
-    "Content-Type: application/json"
-));
-
-$response = curl_exec($ch);
-print_r(json_decode($response));
-?>`
-    },
-    version: 'v1',
-    playgroundEnabled: true
+    version: 'v1.0.0'
   },
   {
-    id: 'buy-airtime',
-    category: 'Bill Payments API',
-    title: 'Buy Airtime',
-    description: 'Purchase airtime for mobile phone numbers across all networks.',
-    method: 'POST',
-    route: '/api/v1/bills/airtime',
-    authenticationRequired: true,
-    requestHeaders: [
-      { name: 'Authorization', type: 'string', required: true, description: 'Bearer {your_secret_key}' },
-      { name: 'Content-Type', type: 'string', required: true, description: 'application/json' }
-    ],
+    id: 'angular-component',
+    category: 'Framework Guides',
+    title: 'Angular Component',
+    description: 'Encapsulate the SDK in an Angular component that exposes success and error events to the host screen.',
+    method: 'GUIDE',
+    route: 'handlePayment(): void',
+    copyValue: 'handlePayment(): void',
+    authenticationRequired: false,
+    requestParametersTitle: 'Component Inputs and Outputs',
     requestParameters: [
-      { name: 'phone_number', type: 'string', required: true, description: 'Phone number to recharge' },
-      { name: 'network', type: 'string', required: true, description: 'Network provider (MTN, GLO, AIRTEL, 9MOBILE)' },
-      { name: 'amount', type: 'number', required: true, description: 'Amount in Naira' },
-      { name: 'reference', type: 'string', required: false, description: 'Unique transaction reference' }
+      { name: '@Input() amount', type: 'number', required: true, description: 'Amount displayed in the template and sent to the SDK.' },
+      { name: '@Input() email', type: 'string', required: true, description: 'Customer email used for the payment request.' },
+      { name: '@Output() success', type: 'EventEmitter<any>', required: true, description: 'Emits the EgolePay success response to the parent component.' },
+      { name: '@Output() error', type: 'EventEmitter<any>', required: true, description: 'Emits SDK errors so the parent can react to failures.' }
     ],
-    sampleRequest: `{
-  "phone_number": "08012345678",
-  "network": "MTN",
-  "amount": 1000,
-  "reference": "airtime_ref_123"
+    sampleRequestTitle: 'Angular Example',
+    sampleRequestLanguage: 'typescript',
+    sampleRequest: `import { Component, EventEmitter, Input, Output } from '@angular/core';
+
+@Component({
+  selector: 'app-payment',
+  template: \`
+    <button (click)="handlePayment()" [disabled]="loading">
+      Pay N{{ amount }}
+    </button>
+  \`
+})
+export class PaymentComponent {
+  @Input() amount!: number;
+  @Input() email!: string;
+  @Output() success = new EventEmitter();
+  @Output() error = new EventEmitter();
+
+  loading = false;
+
+  handlePayment() {
+    this.loading = true;
+
+    new (window as any).EgolePay({
+      apiKey: 'sk_test_xxxxxxxxxx',
+      amount: this.amount,
+      email: this.email,
+      onSuccess: (response: unknown) => {
+        this.loading = false;
+        this.success.emit(response);
+      },
+      onError: (err: unknown) => {
+        this.loading = false;
+        this.error.emit(err);
+      }
+    });
+  }
 }`,
+    sampleResponseTitle: 'Success Payload',
+    sampleResponseLanguage: 'json',
     sampleResponse: `{
   "status": "success",
-  "message": "Airtime purchase successful",
-  "data": {
-    "reference": "airtime_ref_123",
-    "phone_number": "08012345678",
-    "amount": 1000,
-    "status": "completed"
-  }
+  "amount": 5000,
+  "transactionReference": "TXN_123456",
+  "paymentReference": "PAY_123456"
 }`,
+    codeExamplesTitle: 'Template Usage',
     codeExamples: {
-      curl: `curl -X POST https://api.egolapay.com/api/v1/bills/airtime \\
-  -H "Authorization: Bearer YOUR_SECRET_KEY" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "phone_number": "08012345678",
-    "network": "MTN",
-    "amount": 1000
-  }'`,
-      javascript: `const response = await fetch('https://api.egolapay.com/api/v1/bills/airtime', {
-  method: 'POST',
-  headers: {
-    'Authorization': 'Bearer YOUR_SECRET_KEY',
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    phone_number: '08012345678',
-    network: 'MTN',
-    amount: 1000
-  })
-});`,
-      flutter: `import 'package:http/http.dart' as http;
-import 'dart:convert';
-
-Future<void> buyAirtime() async {
-  final response = await http.post(
-    Uri.parse('https://api.egolapay.com/api/v1/bills/airtime'),
-    headers: {
-      'Authorization': 'Bearer YOUR_SECRET_KEY',
-      'Content-Type': 'application/json',
+      snippets: [
+        {
+          id: 'angular-parent',
+          label: 'Parent Usage',
+          language: 'html',
+          code: `<app-payment
+  [amount]="5000"
+  email="customer@example.com"
+  (success)="handleSuccess($event)"
+  (error)="handleError($event)"
+></app-payment>`
+        }
+      ]
     },
-    body: jsonEncode({
-      'phone_number': '08012345678',
-      'network': 'MTN',
-      'amount': 1000,
-    }),
-  );
-  
-  print(jsonDecode(response.body));
-}`,
-      python: `import requests
-
-url = "https://api.egolapay.com/api/v1/bills/airtime"
-payload = {
-    "phone_number": "08012345678",
-    "network": "MTN",
-    "amount": 1000
-}
-
-response = requests.post(url, 
-    headers={"Authorization": "Bearer YOUR_SECRET_KEY"},
-    json=payload)
-print(response.json())`,
-      php: `<?php
-$data = array(
-    "phone_number" => "08012345678",
-    "network" => "MTN",
-    "amount" => 1000
-);
-
-$ch = curl_init("https://api.egolapay.com/api/v1/bills/airtime");
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-    "Authorization: Bearer YOUR_SECRET_KEY"
-));
-
-print_r(json_decode(curl_exec($ch)));
-?>`
-    },
-    version: 'v1',
-    playgroundEnabled: true
-  },
-  {
-    id: 'refund-transaction',
-    category: 'Payments API',
-    title: 'Refund Transaction',
-    description: 'Process a refund for a completed transaction.',
-    method: 'POST',
-    route: '/api/v1/transactions/refund',
-    authenticationRequired: true,
-    requestHeaders: [
-      { name: 'Authorization', type: 'string', required: true, description: 'Bearer {your_secret_key}' },
-      { name: 'Content-Type', type: 'string', required: true, description: 'application/json' }
-    ],
-    requestParameters: [
-      { name: 'transaction_reference', type: 'string', required: true, description: 'Reference of the transaction to refund' },
-      { name: 'amount', type: 'number', required: false, description: 'Amount to refund (full refund if not specified)' },
-      { name: 'reason', type: 'string', required: false, description: 'Reason for the refund' }
-    ],
-    sampleRequest: `{
-  "transaction_reference": "ref_xyz789",
-  "amount": 25000,
-  "reason": "Customer requested refund"
-}`,
-    sampleResponse: `{
-  "status": "success",
-  "message": "Refund processed successfully",
-  "data": {
-    "refund_id": "rfnd_abc123",
-    "transaction_reference": "ref_xyz789",
-    "amount": 25000,
-    "status": "completed",
-    "processed_at": "2026-02-27T11:00:00Z"
-  }
-}`,
-    codeExamples: {
-      curl: `curl -X POST https://api.egolapay.com/api/v1/transactions/refund \\
-  -H "Authorization: Bearer YOUR_SECRET_KEY" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "transaction_reference": "ref_xyz789",
-    "amount": 25000
-  }'`,
-      javascript: `const response = await fetch('https://api.egolapay.com/api/v1/transactions/refund', {
-  method: 'POST',
-  headers: {
-    'Authorization': 'Bearer YOUR_SECRET_KEY',
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    transaction_reference: 'ref_xyz789',
-    amount: 25000
-  })
-});`,
-      flutter: `import 'package:http/http.dart' as http;
-import 'dart:convert';
-
-Future<void> refundTransaction() async {
-  final response = await http.post(
-    Uri.parse('https://api.egolapay.com/api/v1/transactions/refund'),
-    headers: {
-      'Authorization': 'Bearer YOUR_SECRET_KEY',
-      'Content-Type': 'application/json',
-    },
-    body: jsonEncode({
-      'transaction_reference': 'ref_xyz789',
-      'amount': 25000,
-    }),
-  );
-  
-  print(jsonDecode(response.body));
-}`,
-      python: `import requests
-
-url = "https://api.egolapay.com/api/v1/transactions/refund"
-payload = {
-    "transaction_reference": "ref_xyz789",
-    "amount": 25000
-}
-
-response = requests.post(url, 
-    headers={"Authorization": "Bearer YOUR_SECRET_KEY"},
-    json=payload)
-print(response.json())`,
-      php: `<?php
-$data = array(
-    "transaction_reference" => "ref_xyz789",
-    "amount" => 25000
-);
-
-$ch = curl_init("https://api.egolapay.com/api/v1/transactions/refund");
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-    "Authorization: Bearer YOUR_SECRET_KEY",
-    "Content-Type: application/json"
-));
-
-print_r(json_decode(curl_exec($ch)));
-?>`
-    },
-    version: 'v1',
-    playgroundEnabled: true
-  },
-  {
-    id: 'verify-transfer',
-    category: 'Transfers API',
-    title: 'Verify Transfer',
-    description: 'Check the status of a transfer using the transfer code or reference.',
-    method: 'GET',
-    route: '/api/v1/transfers/verify/:reference',
-    authenticationRequired: true,
-    requestHeaders: [
-      { name: 'Authorization', type: 'string', required: true, description: 'Bearer {your_secret_key}' }
-    ],
-    requestParameters: [
-      { name: 'reference', type: 'string', required: true, description: 'Transfer reference or code to verify' }
-    ],
-    sampleResponse: `{
-  "status": "success",
-  "message": "Transfer retrieved successfully",
-  "data": {
-    "reference": "transfer_ref_123",
-    "transfer_code": "TRF_abc123",
-    "amount": 10000,
-    "status": "completed",
-    "recipient": {
-      "account_number": "0123456789",
-      "bank_name": "GTBank"
-    },
-    "completed_at": "2026-02-27T10:45:00Z"
-  }
-}`,
-    codeExamples: {
-      curl: `curl -X GET https://api.egolapay.com/api/v1/transfers/verify/transfer_ref_123 \\
-  -H "Authorization: Bearer YOUR_SECRET_KEY"`,
-      javascript: `const reference = 'transfer_ref_123';
-const response = await fetch(\`https://api.egolapay.com/api/v1/transfers/verify/\${reference}\`, {
-  method: 'GET',
-  headers: {
-    'Authorization': 'Bearer YOUR_SECRET_KEY'
-  }
-});`,
-      flutter: `import 'package:http/http.dart' as http;
-import 'dart:convert';
-
-Future<void> verifyTransfer(String reference) async {
-  final response = await http.get(
-    Uri.parse('https://api.egolapay.com/api/v1/transfers/verify/$reference'),
-    headers: {
-      'Authorization': 'Bearer YOUR_SECRET_KEY',
-    },
-  );
-  
-  print(jsonDecode(response.body));
-}`,
-      python: `import requests
-
-reference = "transfer_ref_123"
-url = f"https://api.egolapay.com/api/v1/transfers/verify/{reference}"
-
-response = requests.get(url, 
-    headers={"Authorization": "Bearer YOUR_SECRET_KEY"})
-print(response.json())`,
-      php: `<?php
-$reference = "transfer_ref_123";
-$url = "https://api.egolapay.com/api/v1/transfers/verify/" . $reference;
-
-$ch = curl_init($url);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-    "Authorization: Bearer YOUR_SECRET_KEY"
-));
-
-print_r(json_decode(curl_exec($ch)));
-?>`
-    },
-    version: 'v1',
-    playgroundEnabled: true
+    version: 'v1.0.0'
   }
 ];
 
-// Extract unique categories for sidebar navigation
-export const categories = Array.from(new Set(apiEndpoints.map(endpoint => endpoint.category)));
+export const categories = Array.from(new Set(apiEndpoints.map((endpoint) => endpoint.category)));
 
-// Helper to get endpoints by category
 export const getEndpointsByCategory = (category: string): ApiEndpoint[] => {
-  return apiEndpoints.filter(endpoint => endpoint.category === category);
+  return apiEndpoints.filter((endpoint) => endpoint.category === category);
 };
 
-// Helper to find endpoint by ID
 export const getEndpointById = (id: string): ApiEndpoint | undefined => {
-  return apiEndpoints.find(endpoint => endpoint.id === id);
+  return apiEndpoints.find((endpoint) => endpoint.id === id);
 };

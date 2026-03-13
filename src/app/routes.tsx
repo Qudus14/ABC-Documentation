@@ -5,6 +5,10 @@ import IntroductionPage from './pages/IntroductionPage';
 import AuthenticationPage from './pages/AuthenticationPage';
 import ApiKeysPage from './pages/ApiKeysPage';
 import EndpointPage from './pages/EndpointPage';
+import TestingPage from './pages/TestingPage';
+import FaqPage from './pages/FaqPage';
+import ErrorCodesPage from './pages/ErrorCodesPage';
+import ChangelogPage from './pages/ChangelogPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 export const router = createBrowserRouter([
@@ -29,24 +33,24 @@ export const router = createBrowserRouter([
         Component: ApiKeysPage
       },
       {
-        path: 'docs/:endpointId',
-        Component: EndpointPage
+        path: 'docs/testing',
+        Component: TestingPage
       },
       {
-        path: 'docs/webhooks',
-        Component: IntroductionPage // Placeholder
+        path: 'docs/faq',
+        Component: FaqPage
       },
       {
         path: 'docs/error-codes',
-        Component: IntroductionPage // Placeholder
-      },
-      {
-        path: 'docs/sdks',
-        Component: IntroductionPage // Placeholder
+        Component: ErrorCodesPage
       },
       {
         path: 'docs/changelog',
-        Component: IntroductionPage // Placeholder
+        Component: ChangelogPage
+      },
+      {
+        path: 'docs/:endpointId',
+        Component: EndpointPage
       },
       {
         path: '*',
