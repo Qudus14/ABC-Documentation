@@ -60,7 +60,7 @@ export default function IntroductionPage() {
             The SDK is designed to be drop-in. Load the script once, then trigger checkout directly from the browser.
           </p>
           <CodeBlock
-            code={`<script src="https://api.egolepay.com/v1/sdk.js"></script>
+            code={`<script src="https://docs.api.egolepay.com/v1/sdk.js"></script>
 
 <button onclick="startPayment()">Pay Now</button>
 

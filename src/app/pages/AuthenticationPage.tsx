@@ -93,7 +93,7 @@ export default function AuthenticationPage() {
                 <tr className="border-t border-border">
                   <td className="px-4 py-3 font-medium">Live</td>
                   <td className="px-4 py-3 font-mono text-sm">sk_live_</td>
-                  <td className="px-4 py-3 text-sm text-muted-foreground">https://api.egolepay.com</td>
+                  <td className="px-4 py-3 text-sm text-muted-foreground">https://docs.api.egolepay.com</td>
                 </tr>
               </tbody>
             </table>

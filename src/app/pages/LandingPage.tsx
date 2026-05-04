@@ -87,7 +87,7 @@ export default function LandingPage() {
                 </div>
               </div>
               <pre className="mt-4 overflow-x-auto text-sm leading-7 text-[#F4EEE5]">
-                <code>{`<script src="https://api.egolepay.com/v1/sdk.js"></script>
+                <code>{`<script src="https://docs.api.egolepay.com/v1/sdk.js"></script>
 
 function startPayment() {
   new EgolePay({

@@ -64,8 +64,8 @@ export const apiEndpoints: ApiEndpoint[] = [
     title: 'Include SDK',
     description: 'Load the hosted EgolePay checkout script on any page where you want to open the payment modal.',
     method: 'SDK',
-    route: '<script src="https://api.egolepay.com/v1/sdk.js"></script>',
-    copyValue: '<script src="https://api.egolepay.com/v1/sdk.js"></script>',
+    route: '<script src="https://docs.api.egolepay.com/v1/sdk.js"></script>',
+    copyValue: '<script src="https://docs.api.egolepay.com/v1/sdk.js"></script>',
     authenticationRequired: false,
     requestHeadersTitle: 'SDK Details',
     requestHeaders: [
@@ -84,7 +84,7 @@ export const apiEndpoints: ApiEndpoint[] = [
     ],
     sampleRequestTitle: 'Embed Example',
     sampleRequestLanguage: 'html',
-    sampleRequest: `<script src="https://api.egolepay.com/v1/sdk.js"></script>
+    sampleRequest: `<script src="https://docs.api.egolepay.com/v1/sdk.js"></script>
 
 <button onclick="startPayment()">Pay Now</button>
 
@@ -105,7 +105,7 @@ export const apiEndpoints: ApiEndpoint[] = [
           id: 'standard-html',
           label: 'HTML Page',
           language: 'html',
-          code: `<script src="https://api.egolepay.com/v1/sdk.js"></script>
+          code: `<script src="https://docs.api.egolepay.com/v1/sdk.js"></script>
 
 <button onclick="startPayment()">Pay Now</button>
 
@@ -124,7 +124,7 @@ export const apiEndpoints: ApiEndpoint[] = [
           id: 'deferred-script',
           label: 'Deferred Load',
           language: 'html',
-          code: `<script defer src="https://api.egolepay.com/v1/sdk.js"></script>
+          code: `<script defer src="https://docs.api.egolepay.com/v1/sdk.js"></script>
 
 <button id="pay-button">Pay Now</button>
 
