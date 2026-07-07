@@ -61,9 +61,7 @@ export default function AuthenticationPage() {
           <CodeBlock 
             code={`new EgolePay({
   apiKey: 'sk_test_your_key_here',
-  referenceNumber: 'EGP77154452626262622',
-  amount: 5000,
-  email: 'customer@example.com'
+  referenceNumber: 'SCP502026622100159'
 });`}
             language="javascript"
           />

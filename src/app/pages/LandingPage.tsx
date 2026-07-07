@@ -6,33 +6,33 @@ export default function LandingPage() {
   const features = [
     {
       icon: Shield,
-      title: 'Hosted Checkout',
-      description: 'EgolePay manages card entry, OTP, and 3DS inside a responsive payment modal.'
+      title: 'Validation-First Flow',
+      description: 'The SDK validates reference numbers first, fetching PIDs, revenue details, and amounts automatically.'
     },
     {
       icon: CreditCard,
-      title: 'Fast Payment Setup',
-      description: 'Load one script, call new EgolePay(), and start collecting payments in minutes.'
+      title: 'Multi-Channel Checkout',
+      description: 'Accept credit card payments (with OTP/3DS verification) or bank transfers to dynamic virtual accounts.'
     },
     {
       icon: Code2,
-      title: 'Framework Examples',
-      description: 'Use the documented React, Vue, and Angular wrappers as your integration baseline.'
+      title: 'Framework Integration',
+      description: 'Reference-centric React, Vue, and Angular components are provided to accelerate your development.'
     },
     {
       icon: LayoutTemplate,
-      title: 'Structured Reference',
-      description: 'Configuration, callbacks, testing, errors, and changelog are organized into endpoint-style pages.'
+      title: 'Interactive Verification',
+      description: 'Payer information validation and custom payment steps are fully integrated into the hosted widget.'
     },
     {
       icon: TestTube,
-      title: 'Sandbox Ready',
-      description: 'Use the documented test key, card numbers, PINs, and OTP values before production.'
+      title: 'Sandbox Testing',
+      description: 'Simulate successful payments, declines, expired references, or pending transfers using mock accounts.'
     },
     {
       icon: CheckCircle2,
       title: 'Simple Go-Live',
-      description: 'Switch from sk_test_ to sk_live_ and let the SDK detect the correct environment.'
+      description: 'Onboard and activate production billing by replacing sk_test_ keys with your live merchant credentials.'
     }
   ];
 
@@ -44,15 +44,15 @@ export default function LandingPage() {
             <div className="space-y-6">
               <div className="inline-flex items-center gap-2 rounded-full border border-[#FF8000]/20 bg-[#FF8000]/10 px-4 py-2 text-sm font-medium text-[#C56A00]">
                 <CreditCard className="w-4 h-4" />
-                EgolePay JavaScript SDK
+                EgolePay Bill Payment SDK
               </div>
 
               <h1 className="max-w-3xl text-4xl font-semibold leading-tight md:text-6xl">
-                Ship EgolePay checkout without rebuilding your payment UI.
+                Ship verified bill payments in minutes.
               </h1>
 
               <p className="max-w-2xl text-lg text-muted-foreground">
-                This documentation is tailored to the current payment integration guide: installation, initialization, callbacks, framework wrappers, sandbox cards, support details, and release notes.
+                Integrate the hosted Paybill SDK. Pass a reference number, and let EgolePay handle the validation, information confirmation, and secure payment processing via Card or Bank Transfer.
               </p>
 
               <div className="flex flex-col gap-4 sm:flex-row">
@@ -63,22 +63,22 @@ export default function LandingPage() {
                   </Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild>
-                  <Link to="/docs/testing">Review Test Cards</Link>
+                  <Link to="/docs/testing">Review Test References</Link>
                 </Button>
               </div>
 
               <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
-                <span className="rounded-full border border-border bg-background/80 px-3 py-1.5">Min amount: N100</span>
-                <span className="rounded-full border border-border bg-background/80 px-3 py-1.5">Max amount: N10,000,000</span>
-                <span className="rounded-full border border-border bg-background/80 px-3 py-1.5">Fees: 1% capped at N1200</span>
+                <span className="rounded-full border border-border bg-background/80 px-3 py-1.5">Card Payments</span>
+                <span className="rounded-full border border-border bg-background/80 px-3 py-1.5">Bank Transfers</span>
+                <span className="rounded-full border border-border bg-background/80 px-3 py-1.5">Auto Reference Validation</span>
               </div>
             </div>
 
             <div className="rounded-[28px] border border-[#1f1f1f] bg-[#131313] p-5 text-left text-white shadow-[0_30px_80px_rgba(24,17,6,0.28)]">
               <div className="flex items-center justify-between border-b border-white/10 pb-4">
                 <div>
-                  <p className="text-sm font-medium text-white">Quick start</p>
-                  <p className="text-xs text-white/60">Hosted SDK install + payment bootstrap</p>
+                  <p className="text-sm font-medium text-white">SDK Quick Start</p>
+                  <p className="text-xs text-white/60">Initialize with a reference number</p>
                 </div>
                 <div className="flex gap-2">
                   <span className="h-3 w-3 rounded-full bg-[#FF5F56]" />
@@ -89,15 +89,16 @@ export default function LandingPage() {
               <pre className="mt-4 overflow-x-auto text-sm leading-7 text-[#F4EEE5]">
                 <code>{`<script src="https://docs.api.egolepay.com/v1/sdk.js"></script>
 
-function startPayment() {
+function payBill() {
   new EgolePay({
     apiKey: 'sk_test_xxxxxxxxxxxxxxxx',
-    referenceNumber: 'EGP77154452626262622',
-    amount: 5000,
-    email: 'customer@example.com',
+    referenceNumber: 'SCP502026622100159',
     onSuccess: (response) => {
       window.location.href =
-        '/success?ref=' + response.transactionReference;
+        '/success?ref=' + response.referenceNumber;
+    },
+    onError: (error) => {
+      console.error(error.message);
     }
   });
 }`}</code>
@@ -111,7 +112,7 @@ function startPayment() {
         <div className="mb-12 text-center">
           <h2 className="mb-4 text-3xl font-bold">Documentation Coverage</h2>
           <p className="mx-auto max-w-2xl text-muted-foreground">
-            The SDK guide has been translated into a browsable reference so implementation details and operational details live together.
+            The Bill Payment SDK documentation covers everything from initialization parameters, visual payment steps, callbacks, framework components, and testing.
           </p>
         </div>
 
@@ -139,7 +140,7 @@ function startPayment() {
           <div className="rounded-[28px] border border-border bg-gradient-to-r from-[#FFF6E7] via-background to-[#FFF0D4] p-10 text-center dark:from-[#2A2114] dark:via-background dark:to-[#20170B]">
             <h2 className="mb-4 text-3xl font-bold">Ready to wire up checkout?</h2>
             <p className="mx-auto mb-8 max-w-2xl text-muted-foreground">
-              Start with installation and initialization, then move through callbacks, framework guides, and sandbox validation before production rollout.
+              Explore the step-by-step verification flows, review integration callbacks, and test using sandbox reference numbers.
             </p>
             <div className="flex flex-col justify-center gap-4 sm:flex-row">
               <Button size="lg" className="bg-[#FF8000] hover:bg-[#E97500]" asChild>

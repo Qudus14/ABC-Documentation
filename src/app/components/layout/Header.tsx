@@ -40,7 +40,7 @@ export function Header({ onMenuClick }: HeaderProps) {
               </div>
               <span className="font-semibold text-lg hidden sm:inline">EgolePay</span>
               <span className="text-xs px-2 py-1 rounded-full border border-border bg-[#FFF3DB] text-[#B86400] hidden sm:inline dark:bg-[#2D2417] dark:text-[#FFD08A]">
-                SDK Docs
+                Bill Payment SDK
               </span>
             </Link>
           </div>

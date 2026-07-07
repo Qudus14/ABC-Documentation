@@ -1,31 +1,156 @@
+import { useState } from 'react';
 import { DocLayout } from '../components/layout/DocLayout';
 import { InfoBox } from '../components/docs/InfoBox';
 import { CodeBlock } from '../components/docs/CodeBlock';
 import { Link } from 'react-router';
+import { Check, CreditCard, Landmark, Search, ShieldCheck } from 'lucide-react';
 
 export default function IntroductionPage() {
+  const [activeStep, setActiveStep] = useState(0);
+
+  const checkoutSteps = [
+    {
+      title: '1. Reference Validation',
+      icon: Search,
+      image: '/sdk_flow_step1.png',
+      description: 'Once initialized, the SDK automatically queries the EgolePay gateway with the provided reference number. If valid, it retrieves and displays the bill information:',
+      details: [
+        'PID: Unique payment ID associated with the customer.',
+        'Revenue: The description of the bill (e.g. Safety Certification).',
+        'Agency: The billing organization (e.g. Lagos State Safety Commission).',
+        'Amount Due: The outstanding balance for the reference.',
+        'Service Fee: Computed dynamically based on the amount (1%, min ₦100, max ₦1200).'
+      ]
+    },
+    {
+      title: '2. Confirm Information',
+      icon: ShieldCheck,
+      image: '/sdk_flow_step2.png',
+      description: 'The payer moves to the confirmation screen where details are locked and the customer validates their name:',
+      details: [
+        'Payer Name: Automatically fetched or inputted by the user.',
+        'Lock Step: Validates correct revenue description and total fees before redirecting to actual financial processors.',
+        'Orange Action Button: Smooth confirmation action to slide into payment options.'
+      ]
+    },
+    {
+      title: '3. Card Payment',
+      icon: CreditCard,
+      image: '/sdk_flow_step3_card.png',
+      description: 'One of two secure payment channels. Payer inputs their card number, expiry, CVV, and PIN:',
+      details: [
+        'Automatic OTP/3DS: The SDK manages the 3DS verification and OTP inputs within the secure frame.',
+        'Secure Encryption: Data is encrypted directly at the checkout widget, keeping merchant scope out of PCI compliance requirements.',
+        'Brand Logos: Trust marks (Visa, Mastercard, Verve) displayed in checkout context.'
+      ]
+    },
+    {
+      title: '4. Bank Transfer',
+      icon: Landmark,
+      image: '/sdk_flow_step3_transfer.png',
+      description: 'The second payment channel. The SDK generates a dynamic virtual account number:',
+      details: [
+        'Sterling Bank Virtual Account: Unique account generated per payment session.',
+        '30-Minute Expiry: Account automatically expires in 30 minutes to manage stock/bill state.',
+        'Copy Action: Direct button to copy the 10-digit account number.',
+        'I Have Paid Trigger: The payer clicks to prompt verification, triggering the onSuccess callback instantly upon confirmation.'
+      ]
+    }
+  ];
+
   return (
     <DocLayout>
       <div className="space-y-10">
         <div className="rounded-[28px] border border-border bg-gradient-to-br from-[#fff9ed] via-background to-[#fff1d6] p-8 shadow-sm dark:from-[#2a2317] dark:via-background dark:to-[#1d160c]">
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#C56A00]">EgolePay JavaScript SDK</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#C56A00]">EgolePay Paybill SDK</p>
           <h1 className="mt-3 max-w-3xl text-4xl font-semibold tracking-tight">Launch EgolePay checkout in three steps.</h1>
           <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
-            This documentation covers the hosted JavaScript SDK for collecting card payments, handling OTP and 3DS flows, and switching from sandbox to live without changing your integration shape.
+            This documentation covers the hosted JavaScript SDK for bill payments. Initialize checkout with a reference number, validate billing details dynamically, and process payments via Card or Bank Transfer.
           </p>
           <div className="mt-6 flex flex-wrap gap-3 text-sm">
             <Link to="/docs/include-sdk" className="rounded-full bg-[#FF8000] px-4 py-2 font-medium text-white transition-colors hover:bg-[#E97500]">
               Start with the SDK
             </Link>
             <Link to="/docs/testing" className="rounded-full border border-border bg-background px-4 py-2 font-medium transition-colors hover:bg-muted/60">
-              View test cards
+              View test references
             </Link>
           </div>
         </div>
 
         <InfoBox type="info" title="What this guide includes">
-          Script installation, payment initialization, callback handling, framework examples, sandbox credentials, supported error codes, FAQs, and the current SDK changelog are all available in this documentation set.
+          Script installation, reference-based initialization, callback handling, framework examples, sandbox references, supported error codes, FAQs, and the current SDK changelog.
         </InfoBox>
+
+        <section id="visual-flow" className="space-y-6">
+          <h2>Visual Checkout Journey</h2>
+          <p className="text-muted-foreground">
+            Click through the interactive steps below to explore how the EgolePay Paybill SDK guides payers from reference validation to final payment:
+          </p>
+          
+          <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
+            {/* Step Selector Tab Bar */}
+            <div className="flex border-b border-border bg-muted/30 overflow-x-auto scrollbar-none">
+              {checkoutSteps.map((step, idx) => {
+                const StepIcon = step.icon;
+                const isActive = activeStep === idx;
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => setActiveStep(idx)}
+                    className={`flex-1 min-w-[150px] flex items-center justify-center gap-2 py-4 px-3 text-sm font-medium border-b-2 transition-all ${
+                      isActive 
+                        ? 'border-[#FF8000] text-[#FF8000] bg-background/50' 
+                        : 'border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                    }`}
+                  >
+                    <StepIcon className="w-4 h-4" />
+                    {step.title}
+                  </button>
+                );
+              })}
+            </div>
+            
+            {/* Tab Body */}
+            <div className="p-6 md:p-8 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] items-start">
+              {/* Image side with border/shadow */}
+              <div className="relative group rounded-xl overflow-hidden border border-border bg-muted/10 p-4 flex items-center justify-center max-h-[480px]">
+                <img 
+                  src={checkoutSteps[activeStep].image} 
+                  alt={checkoutSteps[activeStep].title} 
+                  className="max-h-[420px] w-auto object-contain rounded-lg shadow-md transition-transform duration-300 group-hover:scale-[1.02]"
+                />
+              </div>
+              
+              {/* Description side */}
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl font-semibold flex items-center gap-2">
+                    {checkoutSteps[activeStep].title}
+                  </h3>
+                  <p className="mt-3 text-muted-foreground leading-relaxed">
+                    {checkoutSteps[activeStep].description}
+                  </p>
+                </div>
+                
+                <ul className="space-y-3">
+                  {checkoutSteps[activeStep].details.map((detail, dIdx) => {
+                    const [boldText, ...rest] = detail.split(':');
+                    const normalText = rest.join(':');
+                    return (
+                      <li key={dIdx} className="flex items-start gap-2.5 text-sm">
+                        <Check className="w-4 h-4 text-[#FF8000] mt-0.5 shrink-0" />
+                        <span className="leading-relaxed">
+                          <strong className="text-foreground">{boldText}:</strong>
+                          <span className="text-muted-foreground">{normalText}</span>
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
 
         <section id="quick-start">
           <h2>Quick Start</h2>
@@ -41,7 +166,7 @@ export default function IntroductionPage() {
               <p className="text-sm font-semibold text-[#C56A00]">Step 2</p>
               <h3 id="initialize-checkout" className="mt-2">Initialize payment</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Pass your API key, amount, email, customer <code>referenceNumber</code>, and any callbacks into <code>new EgolePay()</code>.
+                Pass your API key, dynamic reference number (e.g. <code>SCP502026622100159</code>), and callbacks into <code>new EgolePay()</code>.
               </p>
             </div>
             <div className="rounded-2xl border border-border bg-card p-5">
@@ -57,20 +182,18 @@ export default function IntroductionPage() {
         <section id="first-integration">
           <h2>First Integration</h2>
           <p className="mb-4 text-muted-foreground">
-            The SDK is designed to be drop-in. Load the script once, then trigger checkout directly from the browser.
+            The SDK is designed to be drop-in. Load the script once, then trigger checkout by passing the reference number directly.
           </p>
           <CodeBlock
             code={`<script src="https://docs.api.egolepay.com/v1/sdk.js"></script>
 
-<button onclick="startPayment()">Pay Now</button>
+<button onclick="startPayment()">Pay Bill</button>
 
 <script>
   function startPayment() {
     new EgolePay({
       apiKey: 'sk_test_xxxxxxxxxxxxxxxx',
-      referenceNumber: 'EGP77154452626262622',
-      amount: 5000,
-      email: 'customer@example.com',
+      referenceNumber: 'SCP502026622100159',
       onSuccess: function (response) {
         window.location.href = '/success?ref=' + response.transactionReference;
       },
@@ -88,27 +211,27 @@ export default function IntroductionPage() {
           <h2>Integration Rules</h2>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="rounded-2xl border border-border bg-card p-5">
-              <h3 id="amount-limits">Amount limits</h3>
+              <h3 id="reference-validation">Reference validation</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Minimum amount is N100 and the current maximum is N10,000,000 per transaction.
+                Every reference number is validated on EgolePay servers prior to checkout. If invalid or expired, an error callback is fired.
               </p>
             </div>
             <div className="rounded-2xl border border-border bg-card p-5">
-              <h3 id="fees">Fees</h3>
+              <h3 id="fees">Dynamic Fees</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                EgolePay charges 1% per transaction with a minimum fee of N100 and a maximum fee of N1200.
+                A 1% service fee is automatically calculated on the validated amount, with a minimum of N100 and capped at a maximum of N1200.
               </p>
             </div>
             <div className="rounded-2xl border border-border bg-card p-5">
-              <h3 id="otp-3ds">OTP and 3DS</h3>
+              <h3 id="otp-3ds">OTP & Bank Transfers</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                The SDK automatically handles OTP and 3DS authentication flows. You only need to respond to callbacks.
+                The SDK handles both secure 3DS card inputs and Sterling Bank virtual account transfer confirmations automatically.
               </p>
             </div>
             <div className="rounded-2xl border border-border bg-card p-5">
               <h3 id="supported-devices">Device support</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Checkout is responsive and intended to work across desktop and mobile browsers.
+                Checkout is fully responsive, looking premium on both desktop interfaces and mobile browsers.
               </p>
             </div>
           </div>
@@ -120,19 +243,19 @@ export default function IntroductionPage() {
             <Link to="/docs/initialize-payment" className="rounded-2xl border border-border bg-card p-5 transition-colors hover:border-[#FF8000]/40 hover:bg-[#FF8000]/[0.03]">
               <h3 id="configuration-guide">Configuration guide</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Review all supported configuration options, including the required customer reference number and other customer fields.
+                Review all supported configuration options, including prefilling customer parameters (email, phone, name).
               </p>
             </Link>
             <Link to="/docs/callback-events" className="rounded-2xl border border-border bg-card p-5 transition-colors hover:border-[#FF8000]/40 hover:bg-[#FF8000]/[0.03]">
               <h3 id="callbacks-guide">Callbacks guide</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Handle success, failure, cancel, close, and step-change events.
+                React to successful payments (Card or Transfer confirmation), cancel steps, or checkout closings.
               </p>
             </Link>
             <Link to="/docs/testing" className="rounded-2xl border border-border bg-card p-5 transition-colors hover:border-[#FF8000]/40 hover:bg-[#FF8000]/[0.03]">
               <h3 id="sandbox-guide">Sandbox testing</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Use the provided test key, cards, and OTP values before going live.
+                Use mock reference numbers and mock cards/PINs to simulate various checkout states.
               </p>
             </Link>
             <Link to="/docs/faq" className="rounded-2xl border border-border bg-card p-5 transition-colors hover:border-[#FF8000]/40 hover:bg-[#FF8000]/[0.03]">
