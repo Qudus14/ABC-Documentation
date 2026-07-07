@@ -44,14 +44,14 @@ export default function LandingPage() {
             <div className="space-y-6">
               <div className="inline-flex items-center gap-2 rounded-full border border-[#FF8000]/20 bg-[#FF8000]/10 px-4 py-2 text-sm font-medium text-[#C56A00]">
                 <CreditCard className="w-4 h-4" />
-                EgolePay Bill Payment SDK
+                EgolePay PulseBridge SDK
               </div>
               <h1 className="max-w-3xl text-4xl font-semibold leading-tight md:text-6xl">
                 Ship verified bill payments in minutes.
               </h1>
 
               <p className="max-w-2xl text-lg text-muted-foreground">
-                Integrate the hosted Paybill SDK. Pass a reference number, and let EgolePay handle the validation, information confirmation, and secure payment processing via Card or Bank Transfer.
+                Integrate the hosted PulseBridge InlineJS SDK. Pass a transaction reference, and let the checkout wizard handle validation, information confirmation, and secure payment processing.
               </p>
 
               <div className="flex flex-col gap-4 sm:flex-row">
@@ -86,22 +86,27 @@ export default function LandingPage() {
                 </div>
               </div>
               <pre className="mt-4 overflow-x-auto text-sm leading-7 text-[#F4EEE5]">
-                <code>{`<script src="https://docs.api.egolepay.com/v1/sdk.js"></script>
+                <code>{`<script src="https://apigateway-test.egolepay.com/pulsebridge-sdk.js"></script>
 
 function payBill() {
-  new EgolePay({
+  const payment = new InlineJS({
     merchantId: '22C811B4-EF62-*******************',
     apiKey: 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
     secretKey: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxx',
     uGuid: '12345',
     txnRef: 'SCP43202660440414',
-    type: 'Webguid',
+    type: 'WebGuid',
+    amount: 75295.50,
+    email: 'customer@example.com',
     onSuccess: (response) => {
       window.location.href =
         '/success?ref=' + response.txnRef;
     },
+    onClose: () => {
+      console.log('closed');
+    },
     onError: (error) => {
-      console.error(error.message);
+      console.error(error);
     }
   });
 }`}</code>
@@ -115,7 +120,7 @@ function payBill() {
         <div className="mb-12 text-center">
           <h2 className="mb-4 text-3xl font-bold">Documentation Coverage</h2>
           <p className="mx-auto max-w-2xl text-muted-foreground">
-            The Bill Payment SDK documentation covers everything from initialization parameters, visual payment steps, callbacks, framework components, and testing.
+            The PulseBridge SDK documentation covers everything from initialization parameters, visual payment steps, callbacks, framework components, and testing.
           </p>
         </div>
 

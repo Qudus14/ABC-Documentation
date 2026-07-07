@@ -59,13 +59,15 @@ export default function AuthenticationPage() {
             Pass your EgolePay key and credentials directly into the checkout configuration:
           </p>
           <CodeBlock 
-            code={`new EgolePay({
+            code={`const payment = new InlineJS({
   merchantId: '22C811B4-EF62-*******************',
   apiKey: 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
   secretKey: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxx',
   uGuid: '12345',
+  type: 'WebGuid',
   txnRef: 'SCP43202660440414',
-  type: 'Webguid'
+  amount: 75295.50,
+  email: 'customer@example.com'
 });`}
             language="javascript"
           />
