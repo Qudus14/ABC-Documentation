@@ -86,7 +86,7 @@ export default function IntroductionPage() {
           <p className="text-muted-foreground">
             Click through the interactive steps below to explore how the InlineJS SDK guides payers from reference validation to final payment:
           </p>
-          
+
           <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
             {/* Step Selector Tab Bar */}
             <div className="flex border-b border-border bg-muted/30 overflow-x-auto scrollbar-none">
@@ -97,11 +97,10 @@ export default function IntroductionPage() {
                   <button
                     key={idx}
                     onClick={() => setActiveStep(idx)}
-                    className={`flex-1 min-w-[150px] flex items-center justify-center gap-2 py-4 px-3 text-sm font-medium border-b-2 transition-all ${
-                      isActive 
-                        ? 'border-[#FF8000] text-[#FF8000] bg-background/50' 
+                    className={`flex-1 min-w-[150px] flex items-center justify-center gap-2 py-4 px-3 text-sm font-medium border-b-2 transition-all ${isActive
+                        ? 'border-[#FF8000] text-[#FF8000] bg-background/50'
                         : 'border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50'
-                    }`}
+                      }`}
                   >
                     <StepIcon className="w-4 h-4" />
                     {step.title}
@@ -109,18 +108,18 @@ export default function IntroductionPage() {
                 );
               })}
             </div>
-            
+
             {/* Tab Body */}
             <div className="p-6 md:p-8 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] items-start">
               {/* Image side with border/shadow */}
               <div className="relative group rounded-xl overflow-hidden border border-border bg-muted/10 p-4 flex items-center justify-center max-h-[480px]">
-                <img 
-                  src={checkoutSteps[activeStep].image} 
-                  alt={checkoutSteps[activeStep].title} 
+                <img
+                  src={checkoutSteps[activeStep].image}
+                  alt={checkoutSteps[activeStep].title}
                   className="max-h-[420px] w-auto object-contain rounded-lg shadow-md transition-transform duration-300 group-hover:scale-[1.02]"
                 />
               </div>
-              
+
               {/* Description side */}
               <div className="space-y-6">
                 <div>
@@ -131,7 +130,7 @@ export default function IntroductionPage() {
                     {checkoutSteps[activeStep].description}
                   </p>
                 </div>
-                
+
                 <ul className="space-y-3">
                   {checkoutSteps[activeStep].details.map((detail, dIdx) => {
                     const [boldText, ...rest] = detail.split(':');
