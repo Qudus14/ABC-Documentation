@@ -25,7 +25,7 @@ export function Sidebar({ className = '' }: SidebarProps) {
         { title: 'Introduction', path: '/docs/introduction', icon: BookOpen },
         { title: 'Authentication', path: '/docs/authentication', icon: Key },
         { title: 'API Keys', path: '/docs/api-keys', icon: Key },
-        { title: 'Testing', path: '/docs/testing', icon: FlaskConical }
+        // { title: 'Testing', path: '/docs/testing', icon: FlaskConical }
       ]
     }
   ];

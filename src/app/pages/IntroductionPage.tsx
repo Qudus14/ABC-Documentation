@@ -71,9 +71,9 @@ export default function IntroductionPage() {
             <Link to="/docs/include-sdk" className="rounded-full bg-[#FF8000] px-4 py-2 font-medium text-white transition-colors hover:bg-[#E97500]">
               Start with the SDK
             </Link>
-            <Link to="/docs/testing" className="rounded-full border border-border bg-background px-4 py-2 font-medium transition-colors hover:bg-muted/60">
+            {/* <Link to="/docs/testing" className="rounded-full border border-border bg-background px-4 py-2 font-medium transition-colors hover:bg-muted/60">
               View test references
-            </Link>
+            </Link> */}
           </div>
         </div>
 
@@ -256,12 +256,12 @@ export default function IntroductionPage() {
                 React to successful payments (Card or Transfer confirmation), cancel steps, or checkout closings.
               </p>
             </Link>
-            <Link to="/docs/testing" className="rounded-2xl border border-border bg-card p-5 transition-colors hover:border-[#FF8000]/40 hover:bg-[#FF8000]/[0.03]">
+            {/* <Link to="/docs/testing" className="rounded-2xl border border-border bg-card p-5 transition-colors hover:border-[#FF8000]/40 hover:bg-[#FF8000]/[0.03]">
               <h3 id="sandbox-guide">Sandbox testing</h3>
               <p className="mt-2 text-sm text-muted-foreground">
                 Use mock references and mock cards/PINs to simulate various checkout states.
               </p>
-            </Link>
+            </Link> */}
             <Link to="/docs/faq" className="rounded-2xl border border-border bg-card p-5 transition-colors hover:border-[#FF8000]/40 hover:bg-[#FF8000]/[0.03]">
               <h3 id="faq-guide">FAQ and support</h3>
               <p className="mt-2 text-sm text-muted-foreground">

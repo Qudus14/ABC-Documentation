@@ -62,9 +62,9 @@ export default function LandingPage() {
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
-                <Button size="lg" variant="outline" asChild>
+                {/* <Button size="lg" variant="outline" asChild>
                   <Link to="/docs/testing">Review Test References</Link>
-                </Button>
+                </Button> */}
               </div>
 
               <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
