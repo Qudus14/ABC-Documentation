@@ -3,11 +3,11 @@ import { CodeBlock } from '../components/docs/CodeBlock';
 import { InfoBox } from '../components/docs/InfoBox';
 
 const testReferences = [
-  { reference: 'SCP502026622100159', scenario: 'Successful Bill Validation', result: 'Returns Lagos State Safety Commission bill (Amount: ₦74,550.00)' },
-  { reference: 'SCP502026622100222', scenario: 'Expired Reference Validation', result: 'Fires onError callback with "EXPIRED_REFERENCE"' },
-  { reference: 'SCP502026622100333', scenario: 'Invalid Reference Validation', result: 'Fires onError callback with "INVALID_REFERENCE"' },
-  { reference: 'SCP502026622100444', scenario: 'Card Decline Simulation', result: 'Validation succeeds; any card checkout fails with insufficient funds' },
-  { reference: 'SCP502026622100555', scenario: 'Transfer Expiry Simulation', result: 'Validation succeeds; dynamic transfer account expires immediately' }
+  { reference: 'SCP43202660440414', scenario: 'Successful Bill Validation', result: 'Returns Lagos State Safety Commission bill (Amount: ₦74,550.00)' },
+  { reference: 'SCP43202660440222', scenario: 'Expired Reference Validation', result: 'Fires onError callback with "EXPIRED_REFERENCE"' },
+  { reference: 'SCP43202660440333', scenario: 'Invalid Reference Validation', result: 'Fires onError callback with "INVALID_REFERENCE"' },
+  { reference: 'SCP43202660440444', scenario: 'Card Decline Simulation', result: 'Validation succeeds; any card checkout fails with insufficient funds' },
+  { reference: 'SCP43202660440555', scenario: 'Transfer Expiry Simulation', result: 'Validation succeeds; dynamic transfer account expires immediately' }
 ];
 
 const testCards = [

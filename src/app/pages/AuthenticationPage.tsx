@@ -56,12 +56,16 @@ export default function AuthenticationPage() {
         <section id="sdk-authentication">
           <h2>Using the Key in the SDK</h2>
           <p className="text-muted-foreground mb-4">
-            Pass your EgolePay key directly into the checkout configuration:
+            Pass your EgolePay key and credentials directly into the checkout configuration:
           </p>
           <CodeBlock 
             code={`new EgolePay({
-  apiKey: 'sk_test_your_key_here',
-  referenceNumber: 'SCP502026622100159'
+  merchantId: '22C811B4-EF62-48DA-8F35-E714F3992BC4',
+  apiKey: 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+  secretKey: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxx',
+  uGuid: '12345',
+  txnRef: 'SCP43202660440414',
+  type: 'Webguid'
 });`}
             language="javascript"
           />

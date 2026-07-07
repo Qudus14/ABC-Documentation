@@ -78,7 +78,7 @@ export default function LandingPage() {
               <div className="flex items-center justify-between border-b border-white/10 pb-4">
                 <div>
                   <p className="text-sm font-medium text-white">SDK Quick Start</p>
-                  <p className="text-xs text-white/60">Initialize with a reference number</p>
+                  <p className="text-xs text-white/60">Initialize with your credentials</p>
                 </div>
                 <div className="flex gap-2">
                   <span className="h-3 w-3 rounded-full bg-[#FF5F56]" />
@@ -91,11 +91,15 @@ export default function LandingPage() {
 
 function payBill() {
   new EgolePay({
-    apiKey: 'sk_test_xxxxxxxxxxxxxxxx',
-    referenceNumber: 'SCP502026622100159',
+    merchantId: '22C811B4-EF62-48DA-8F35-E714F3992BC4',
+    apiKey: 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+    secretKey: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxx',
+    uGuid: '12345',
+    txnRef: 'SCP43202660440414',
+    type: 'Webguid',
     onSuccess: (response) => {
       window.location.href =
-        '/success?ref=' + response.referenceNumber;
+        '/success?ref=' + response.txnRef;
     },
     onError: (error) => {
       console.error(error.message);

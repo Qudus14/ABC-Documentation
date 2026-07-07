@@ -13,7 +13,7 @@ export default function IntroductionPage() {
       title: '1. Reference Validation',
       icon: Search,
       image: '/sdk_flow_step1.png',
-      description: 'Once initialized, the SDK automatically queries the EgolePay gateway with the provided reference number. If valid, it retrieves and displays the bill information:',
+      description: 'Once initialized, the SDK automatically queries the EgolePay gateway with the transaction reference (txnRef). If valid, it retrieves and displays the bill information:',
       details: [
         'PID: Unique payment ID associated with the customer.',
         'Revenue: The description of the bill (e.g. Safety Certification).',
@@ -65,7 +65,7 @@ export default function IntroductionPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#C56A00]">EgolePay Paybill SDK</p>
           <h1 className="mt-3 max-w-3xl text-4xl font-semibold tracking-tight">Launch EgolePay checkout in three steps.</h1>
           <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
-            This documentation covers the hosted JavaScript SDK for bill payments. Initialize checkout with a reference number, validate billing details dynamically, and process payments via Card or Bank Transfer.
+            This documentation covers the hosted JavaScript SDK for bill payments. Initialize checkout with your credentials and transaction reference, validate billing details dynamically, and process payments via Card or Bank Transfer.
           </p>
           <div className="mt-6 flex flex-wrap gap-3 text-sm">
             <Link to="/docs/include-sdk" className="rounded-full bg-[#FF8000] px-4 py-2 font-medium text-white transition-colors hover:bg-[#E97500]">
@@ -78,7 +78,7 @@ export default function IntroductionPage() {
         </div>
 
         <InfoBox type="info" title="What this guide includes">
-          Script installation, reference-based initialization, callback handling, framework examples, sandbox references, supported error codes, FAQs, and the current SDK changelog.
+          Script installation, credential-based initialization, callback handling, framework examples, sandbox references, supported error codes, FAQs, and the current SDK changelog.
         </InfoBox>
 
         <section id="visual-flow" className="space-y-6">
@@ -166,7 +166,7 @@ export default function IntroductionPage() {
               <p className="text-sm font-semibold text-[#C56A00]">Step 2</p>
               <h3 id="initialize-checkout" className="mt-2">Initialize payment</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Pass your API key, dynamic reference number (e.g. <code>SCP502026622100159</code>), and callbacks into <code>new EgolePay()</code>.
+                Pass your credentials and transaction reference number (e.g. <code>SCP43202660440414</code>) into <code>new EgolePay()</code>.
               </p>
             </div>
             <div className="rounded-2xl border border-border bg-card p-5">
@@ -182,7 +182,7 @@ export default function IntroductionPage() {
         <section id="first-integration">
           <h2>First Integration</h2>
           <p className="mb-4 text-muted-foreground">
-            The SDK is designed to be drop-in. Load the script once, then trigger checkout by passing the reference number directly.
+            The SDK is designed to be drop-in. Load the script once, then trigger checkout by passing the configuration parameters.
           </p>
           <CodeBlock
             code={`<script src="https://docs.api.egolepay.com/v1/sdk.js"></script>
@@ -192,8 +192,12 @@ export default function IntroductionPage() {
 <script>
   function startPayment() {
     new EgolePay({
-      apiKey: 'sk_test_xxxxxxxxxxxxxxxx',
-      referenceNumber: 'SCP502026622100159',
+      merchantId: '22C811B4-EF62-48DA-8F35-E714F3992BC4',
+      apiKey: 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      secretKey: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      uGuid: '12345',
+      txnRef: 'SCP43202660440414',
+      type: 'Webguid',
       onSuccess: function (response) {
         window.location.href = '/success?ref=' + response.transactionReference;
       },
@@ -213,7 +217,7 @@ export default function IntroductionPage() {
             <div className="rounded-2xl border border-border bg-card p-5">
               <h3 id="reference-validation">Reference validation</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Every reference number is validated on EgolePay servers prior to checkout. If invalid or expired, an error callback is fired.
+                Every transaction reference number (txnRef) is validated on EgolePay servers prior to checkout. If invalid or expired, an error callback is fired.
               </p>
             </div>
             <div className="rounded-2xl border border-border bg-card p-5">
@@ -243,7 +247,7 @@ export default function IntroductionPage() {
             <Link to="/docs/initialize-payment" className="rounded-2xl border border-border bg-card p-5 transition-colors hover:border-[#FF8000]/40 hover:bg-[#FF8000]/[0.03]">
               <h3 id="configuration-guide">Configuration guide</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Review all supported configuration options, including prefilling customer parameters (email, phone, name).
+                Review all supported configuration options, including credentials and callbacks.
               </p>
             </Link>
             <Link to="/docs/callback-events" className="rounded-2xl border border-border bg-card p-5 transition-colors hover:border-[#FF8000]/40 hover:bg-[#FF8000]/[0.03]">
@@ -255,7 +259,7 @@ export default function IntroductionPage() {
             <Link to="/docs/testing" className="rounded-2xl border border-border bg-card p-5 transition-colors hover:border-[#FF8000]/40 hover:bg-[#FF8000]/[0.03]">
               <h3 id="sandbox-guide">Sandbox testing</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Use mock reference numbers and mock cards/PINs to simulate various checkout states.
+                Use mock references and mock cards/PINs to simulate various checkout states.
               </p>
             </Link>
             <Link to="/docs/faq" className="rounded-2xl border border-border bg-card p-5 transition-colors hover:border-[#FF8000]/40 hover:bg-[#FF8000]/[0.03]">
