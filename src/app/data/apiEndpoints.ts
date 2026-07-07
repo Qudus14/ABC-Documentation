@@ -62,10 +62,10 @@ export const apiEndpoints: ApiEndpoint[] = [
     id: 'include-sdk',
     category: 'SDK Basics',
     title: 'Include SDK',
-    description: 'Load the hosted EgolePay checkout script on any page where you want to open the payment modal.',
+    description: 'Load the hosted PulseBridge checkout script on any page where you want to open the payment modal.',
     method: 'SDK',
-    route: '<script src="https://docs.api.egolepay.com/v1/sdk.js"></script>',
-    copyValue: '<script src="https://docs.api.egolepay.com/v1/sdk.js"></script>',
+    route: '<script src="https://apigateway-test.egolepay.com/pulsebridge-sdk.js"></script>',
+    copyValue: '<script src="https://apigateway-test.egolepay.com/pulsebridge-sdk.js"></script>',
     authenticationRequired: false,
     requestHeadersTitle: 'SDK Details',
     requestHeaders: [
@@ -73,35 +73,42 @@ export const apiEndpoints: ApiEndpoint[] = [
         name: 'Script URL',
         type: 'string',
         required: true,
-        description: 'Hosted JavaScript bundle that exposes the EgolePay checkout constructor.'
+        description: 'Hosted JavaScript bundle that exposes the PulseBridge checkout constructor.'
       },
       {
         name: 'Global object',
-        type: 'window.EgolePay',
+        type: 'window.InlineJS',
         required: true,
         description: 'Constructor available after the script loads and ready to be used in browser code.'
       }
     ],
     sampleRequestTitle: 'Embed Example',
     sampleRequestLanguage: 'html',
-    sampleRequest: `<script src="https://docs.api.egolepay.com/v1/sdk.js"></script>
+    sampleRequest: `<script src="https://apigateway-test.egolepay.com/pulsebridge-sdk.js"></script>
 
 <button onclick="startPayment()">Pay Bill</button>
 
 <script>
   function startPayment() {
-    new EgolePay({
+    const payment = new InlineJS({
       merchantId: '22C811B4-EF62-*******************',
       apiKey: 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       secretKey: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxx',
       uGuid: '12345',
       txnRef: 'SCP43202660440414',
-      type: 'Webguid',
+      type: 'WebGuid',
+      amount: 75295.50,
+      email: 'customer@example.com',
+      currency: 'NGN',
+      description: 'Safety Certification Payment',
       onSuccess: function (response) {
-        window.location.href = '/success?ref=' + response.transactionReference;
+        console.log('onSuccess', response);
+      },
+      onClose: function (info) {
+        console.log('onClose');
       },
       onError: function (error) {
-        alert(error.message);
+        console.log('onError', error);
       }
     });
   }
@@ -113,21 +120,23 @@ export const apiEndpoints: ApiEndpoint[] = [
           id: 'standard-html',
           label: 'HTML Page',
           language: 'html',
-          code: `<script src="https://docs.api.egolepay.com/v1/sdk.js"></script>
+          code: `<script src="https://apigateway-test.egolepay.com/pulsebridge-sdk.js"></script>
 
 <button onclick="startPayment()">Pay Bill</button>
 
 <script>
   function startPayment() {
-    new EgolePay({
+    const payment = new InlineJS({
       merchantId: '22C811B4-EF62-*******************',
       apiKey: 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       secretKey: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxx',
       uGuid: '12345',
       txnRef: 'SCP43202660440414',
-      type: 'Webguid',
+      type: 'WebGuid',
+      amount: 75295.50,
+      email: 'customer@example.com',
       onSuccess: function (response) {
-        window.location.href = '/success?ref=' + response.transactionReference;
+        console.log('onSuccess', response);
       }
     });
   }
@@ -137,22 +146,24 @@ export const apiEndpoints: ApiEndpoint[] = [
           id: 'deferred-script',
           label: 'Deferred Load',
           language: 'html',
-          code: `<script defer src="https://docs.api.egolepay.com/v1/sdk.js"></script>
+          code: `<script defer src="https://apigateway-test.egolepay.com/pulsebridge-sdk.js"></script>
 
 <button id="pay-button">Pay Bill</button>
 
 <script>
   window.addEventListener('load', function () {
     document.getElementById('pay-button').addEventListener('click', function () {
-      new EgolePay({
+      const payment = new InlineJS({
         merchantId: '22C811B4-EF62-*******************',
         apiKey: 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
         secretKey: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxx',
         uGuid: '12345',
         txnRef: 'SCP43202660440414',
-        type: 'Webguid',
+        type: 'WebGuid',
+        amount: 75295.50,
+        email: 'customer@example.com',
         onSuccess: function (response) {
-          window.location.href = '/success?ref=' + response.transactionReference;
+          console.log('onSuccess', response);
         }
       });
     });
@@ -167,16 +178,18 @@ export const apiEndpoints: ApiEndpoint[] = [
     id: 'initialize-payment',
     category: 'SDK Basics',
     title: 'Initialize Payment',
-    description: 'Create a checkout session by passing your merchant identifiers, API keys, wallet ID, and transaction reference into the EgolePay constructor. The SDK will automatically validate the reference and display the bill details.',
+    description: 'Create a checkout session by passing your merchant identifiers, API keys, wallet ID, and transaction details into the InlineJS constructor.',
     method: 'SDK',
-    route: 'new EgolePay(config)',
-    copyValue: `new EgolePay({
+    route: 'new InlineJS(config)',
+    copyValue: `new InlineJS({
   merchantId: '22C811B4-EF62-*******************',
   apiKey: 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
   secretKey: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxx',
   uGuid: '12345',
+  type: 'WebGuid',
   txnRef: 'SCP43202660440414',
-  type: 'Webguid'
+  amount: 75295.50,
+  email: 'customer@example.com'
 })`,
     authenticationRequired: false,
     requestParametersTitle: 'Configuration Options',
@@ -185,29 +198,37 @@ export const apiEndpoints: ApiEndpoint[] = [
       { name: 'apiKey', type: 'string', required: true, description: 'Your EgolePay API key. Use sk_test_ prefix in sandbox.' },
       { name: 'secretKey', type: 'string', required: true, description: 'Your EgolePay Secret/Public key. Use pk_test_ prefix in sandbox.' },
       { name: 'uGuid', type: 'string', required: true, description: 'Egole Wallet ID (e.g. 12345 for sandbox testing).' },
-      { name: 'txnRef', type: 'string', required: true, description: 'Required transaction/bill reference number (e.g. SCP43202660440414). The SDK resolves this reference to validate and fetch bill details like PID, Revenue Type, Agency Name, and Amount.' },
-      { name: 'type', type: 'string', required: true, description: 'Integration type. Set to "Webguid".' }
+      { name: 'type', type: 'string', required: true, description: 'Integration type. Set to "WebGuid".' },
+      { name: 'txnRef', type: 'string', required: true, description: 'Required transaction/bill reference number (e.g. SCP43202660440414).' },
+      { name: 'amount', type: 'number', required: true, description: 'The bill payment amount in NGN.' },
+      { name: 'email', type: 'string', required: true, description: 'Customer email address used for confirmations and tracking.' },
+      { name: 'currency', type: 'string', required: false, description: 'Payment currency, defaults to "NGN".' },
+      { name: 'description', type: 'string', required: false, description: 'Brief description of the transaction.' }
     ],
     sampleRequestTitle: 'SDK Initialization Example',
     sampleRequestLanguage: 'javascript',
     sampleRequest: `function startPayment() {
-  new EgolePay({
+  const payment = new InlineJS({
     merchantId: '22C811B4-EF62-*******************',
     apiKey: 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
     secretKey: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxx',
     uGuid: '12345',
+    type: 'WebGuid',
     txnRef: 'SCP43202660440414',
-    type: 'Webguid',
+    amount: 75295.50,
+    email: 'customer@example.com',
+    currency: 'NGN',
+    description: 'Safety Certification Payment',
     onSuccess: function (response) {
-      console.log('Payment successful!', response);
+      console.log('onSuccess', response);
       window.location.href = '/success?ref=' + response.transactionReference;
     },
-    onError: function (error) {
-      console.error('Payment failed:', error);
-      alert(error.message);
+    onClose: function (info) {
+      console.log('onClose');
     },
-    onCancel: function () {
-      console.log('User cancelled payment');
+    onError: function (error) {
+      console.error('onError', error);
+      alert(error.message);
     }
   });
 }`,
@@ -229,13 +250,15 @@ export const apiEndpoints: ApiEndpoint[] = [
           label: 'Basic Checkout',
           language: 'javascript',
           code: `function payBill() {
-  new EgolePay({
+  const payment = new InlineJS({
     merchantId: '22C811B4-EF62-*******************',
     apiKey: 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
     secretKey: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxx',
     uGuid: '12345',
     txnRef: 'SCP43202660440414',
-    type: 'Webguid',
+    type: 'WebGuid',
+    amount: 75295.50,
+    email: 'customer@example.com',
     onSuccess: (res) => {
       console.log('Payment completed: ' + res.transactionReference);
       window.location.href = '/receipt?ref=' + res.txnRef;
@@ -260,48 +283,40 @@ export const apiEndpoints: ApiEndpoint[] = [
     id: 'callback-events',
     category: 'SDK Basics',
     title: 'Callback Events',
-    description: 'Use EgolePay callbacks to react to successful payments, failures, modal closes, and user journey changes.',
+    description: 'Use InlineJS callbacks to react to successful payments, failures, and modal closes.',
     method: 'EVENT',
-    route: 'onSuccess | onError | onCancel | onClose | onStepChange',
+    route: 'onSuccess | onError | onClose',
     copyValue: `{
   onSuccess(response) {},
   onError(error) {},
-  onCancel() {},
-  onClose(info) {},
-  onStepChange(step) {}
+  onClose(info) {}
 }`,
     authenticationRequired: false,
     requestParametersTitle: 'Available Callbacks',
     requestParameters: [
       { name: 'onSuccess(response)', type: 'function', required: false, description: 'Runs after a successful payment (either card submission or when "I Have Paid" bank transfer is verified). The response contains status, amount, transactionReference, paymentMethod, and txnRef.' },
       { name: 'onError(error)', type: 'function', required: false, description: 'Runs when a validation or payment attempt fails (e.g. invalid reference, invalid PIN, card decline, or expired bank transfer).' },
-      { name: 'onCancel()', type: 'function', required: false, description: 'Runs when the user cancels the payment flow before completion.' },
-      { name: 'onClose(info)', type: 'function', required: false, description: 'Runs when the modal closes and includes a reason such as USER_CLOSED or PAYMENT_SUCCESSFUL.' },
-      { name: 'onStepChange(step)', type: 'function', required: false, description: 'Runs whenever the customer moves between checkout steps: "bill_details", "confirm_info", "payment_options", "card_payment", "bank_transfer".' }
+      { name: 'onClose(info)', type: 'function', required: false, description: 'Runs when the checkout modal is closed.' }
     ],
     sampleRequestTitle: 'Callback Configuration',
     sampleRequestLanguage: 'javascript',
-    sampleRequest: `new EgolePay({
+    sampleRequest: `const payment = new InlineJS({
   merchantId: '22C811B4-EF62-*******************',
   apiKey: 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
   secretKey: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxx',
   uGuid: '12345',
   txnRef: 'SCP43202660440414',
-  type: 'Webguid',
+  type: 'WebGuid',
+  amount: 75295.50,
+  email: 'customer@example.com',
   onSuccess: function (response) {
     console.log('Success!', response.transactionReference, response.paymentMethod);
   },
   onError: function (error) {
     console.log('Error:', error.message);
   },
-  onCancel: function () {
-    console.log('Payment cancelled by customer');
-  },
   onClose: function (info) {
-    console.log('Modal closed, reason:', info.reason);
-  },
-  onStepChange: function (step) {
-    console.log('Current checkout step:', step.currentStep);
+    console.log('Modal closed');
   }
 });`,
     sampleResponseTitle: 'Example Success Response',
@@ -338,7 +353,7 @@ export const apiEndpoints: ApiEndpoint[] = [
           label: 'onError',
           language: 'javascript',
           code: `onError: function (error) {
-  console.log(error.message);
+  console.log(error);
   // "Invalid reference number" or "Declined: Insufficient funds"
 }`
         },
@@ -347,17 +362,7 @@ export const apiEndpoints: ApiEndpoint[] = [
           label: 'onClose',
           language: 'javascript',
           code: `onClose: function (info) {
-  console.log(info.reason);
-  // "USER_CLOSED" or "PAYMENT_SUCCESSFUL"
-}`
-        },
-        {
-          id: 'step-handler',
-          label: 'onStepChange',
-          language: 'javascript',
-          code: `onStepChange: function (step) {
-  console.log(step.currentStep);
-  // "bill_details", "confirm_info", "payment_options", "card_payment", "bank_transfer"
+  console.log("onClose");
 }`
         }
       ]
@@ -368,37 +373,43 @@ export const apiEndpoints: ApiEndpoint[] = [
     id: 'react-component',
     category: 'Framework Guides',
     title: 'React Component',
-    description: 'Wrap EgolePay checkout in a reusable React button that receives the configuration parameters and callbacks.',
+    description: 'Wrap PulseBridge checkout in a reusable React button that receives the configuration parameters and callbacks.',
     method: 'GUIDE',
-    route: 'function PaymentButton({ txnRef, onSuccess, onError })',
-    copyValue: 'function PaymentButton({ txnRef, onSuccess, onError })',
+    route: 'function PaymentButton({ txnRef, amount, email, onSuccess, onError, onClose })',
+    copyValue: 'function PaymentButton({ txnRef, amount, email, onSuccess, onError, onClose })',
     authenticationRequired: false,
     requestParametersTitle: 'Component Props',
     requestParameters: [
-      { name: 'txnRef', type: 'string', required: true, description: 'Transaction reference number passed into the EgolePay config.' },
-      { name: 'onSuccess', type: '(response) => void', required: true, description: 'Handler that receives the EgolePay success payload.' },
-      { name: 'onError', type: '(error) => void', required: false, description: 'Handler that receives the EgolePay error payload.' }
+      { name: 'txnRef', type: 'string', required: true, description: 'Transaction reference number passed into the InlineJS config.' },
+      { name: 'amount', type: 'number', required: true, description: 'The payment amount in NGN.' },
+      { name: 'email', type: 'string', required: true, description: 'Customer email address.' },
+      { name: 'onSuccess', type: '(response) => void', required: true, description: 'Handler that receives the success payload.' },
+      { name: 'onError', type: '(error) => void', required: false, description: 'Handler that receives the error payload.' },
+      { name: 'onClose', type: '() => void', required: false, description: 'Handler that fires when the checkout modal closes.' }
     ],
     sampleRequestTitle: 'React Example',
     sampleRequestLanguage: 'jsx',
     sampleRequest: `import React from 'react';
 
-function PaymentButton({ txnRef, onSuccess, onError }) {
+function PaymentButton({ txnRef, amount, email, onSuccess, onError, onClose }) {
   const handlePayment = () => {
-    if (!window.EgolePay) {
-      console.error('EgolePay SDK not loaded');
+    if (!window.InlineJS) {
+      console.error('PulseBridge SDK not loaded');
       return;
     }
     
-    new window.EgolePay({
+    new window.InlineJS({
       merchantId: '22C811B4-EF62-*******************',
       apiKey: process.env.REACT_APP_EGOLEPAY_KEY,
       secretKey: process.env.REACT_APP_EGOLEPAY_SECRET_KEY,
       uGuid: '12345',
       txnRef,
-      type: 'Webguid',
+      type: 'WebGuid',
+      amount,
+      email,
       onSuccess,
-      onError: onError || ((err) => alert(err.message))
+      onError: onError || ((err) => console.log('Error', err)),
+      onClose: onClose || (() => console.log('onClose'))
     });
   };
 
@@ -429,11 +440,16 @@ function PaymentButton({ txnRef, onSuccess, onError }) {
   return (
     <PaymentButton
       txnRef="SCP43202660440414"
+      amount={75295.50}
+      email="customer@example.com"
       onSuccess={(response) => {
         window.location.href = '/receipt?ref=' + response.transactionReference;
       }}
       onError={(err) => {
-        console.error('Checkout failed:', err.message);
+        console.error('Checkout failed:', err);
+      }}
+      onClose={() => {
+        console.log('Checkout closed');
       }}
     />
   );
@@ -447,14 +463,16 @@ function PaymentButton({ txnRef, onSuccess, onError }) {
     id: 'vue-component',
     category: 'Framework Guides',
     title: 'Vue Component',
-    description: 'Use a Vue component to manage loading state while forwarding success and error events to parent components.',
+    description: 'Use a Vue component to manage loading state while forwarding success, error, and close events to parent components.',
     method: 'GUIDE',
     route: 'methods.handlePayment()',
     copyValue: 'methods.handlePayment()',
     authenticationRequired: false,
     requestParametersTitle: 'Component Inputs',
     requestParameters: [
-      { name: 'txnRef', type: 'String', required: true, description: 'Transaction reference number passed into the SDK config.' },
+      { name: 'txnRef', type: 'String', required: true, description: 'Transaction reference number.' },
+      { name: 'amount', type: 'Number', required: true, description: 'Payment amount in NGN.' },
+      { name: 'email', type: 'String', required: true, description: 'Customer email address.' },
       { name: 'loading', type: 'Boolean', required: false, description: 'Component state that disables the button while checkout is in progress.' }
     ],
     sampleRequestTitle: 'Vue Example',
@@ -467,7 +485,7 @@ function PaymentButton({ txnRef, onSuccess, onError }) {
 
 <script>
 export default {
-  props: ['txnRef'],
+  props: ['txnRef', 'amount', 'email'],
   data() {
     return {
       loading: false
@@ -477,13 +495,15 @@ export default {
     handlePayment() {
       this.loading = true;
 
-      new window.EgolePay({
+      new window.InlineJS({
         merchantId: '22C811B4-EF62-*******************',
         apiKey: process.env.VUE_APP_EGOLEPAY_KEY,
         secretKey: process.env.VUE_APP_EGOLEPAY_SECRET_KEY,
         uGuid: '12345',
         txnRef: this.txnRef,
-        type: 'Webguid',
+        type: 'WebGuid',
+        amount: this.amount,
+        email: this.email,
         onSuccess: (response) => {
           this.loading = false;
           this.$emit('success', response);
@@ -491,6 +511,10 @@ export default {
         onError: (error) => {
           this.loading = false;
           this.$emit('error', error);
+        },
+        onClose: () => {
+          this.loading = false;
+          this.$emit('close');
         }
       });
     }
@@ -516,8 +540,11 @@ export default {
           language: 'html',
           code: `<payment-button
   txn-ref="SCP43202660440414"
+  :amount="75295.50"
+  email="customer@example.com"
   @success="handleSuccess"
   @error="handleError"
+  @close="handleClose"
 />`
         }
       ]
@@ -528,16 +555,19 @@ export default {
     id: 'angular-component',
     category: 'Framework Guides',
     title: 'Angular Component',
-    description: 'Encapsulate the SDK in an Angular component that exposes success and error events to the host screen.',
+    description: 'Encapsulate the SDK in an Angular component that exposes success, error, and close events to the host screen.',
     method: 'GUIDE',
     route: 'handlePayment(): void',
     copyValue: 'handlePayment(): void',
     authenticationRequired: false,
     requestParametersTitle: 'Component Inputs and Outputs',
     requestParameters: [
-      { name: '@Input() txnRef', type: 'string', required: true, description: 'Transaction reference number passed into the EgolePay setup.' },
-      { name: '@Output() success', type: 'EventEmitter<any>', required: true, description: 'Emits the EgolePay success response to the parent component.' },
-      { name: '@Output() error', type: 'EventEmitter<any>', required: true, description: 'Emits SDK errors so the parent can react to failures.' }
+      { name: '@Input() txnRef', type: 'string', required: true, description: 'Transaction reference number.' },
+      { name: '@Input() amount', type: 'number', required: true, description: 'The bill payment amount.' },
+      { name: '@Input() email', type: 'string', required: true, description: 'Customer email.' },
+      { name: '@Output() success', type: 'EventEmitter<any>', required: true, description: 'Emits the success response to the parent.' },
+      { name: '@Output() error', type: 'EventEmitter<any>', required: true, description: 'Emits SDK errors.' },
+      { name: '@Output() close', type: 'EventEmitter<any>', required: true, description: 'Emits close event.' }
     ],
     sampleRequestTitle: 'Angular Example',
     sampleRequestLanguage: 'typescript',
@@ -553,21 +583,26 @@ export default {
 })
 export class PaymentComponent {
   @Input() txnRef!: string;
+  @Input() amount!: number;
+  @Input() email!: string;
   @Output() success = new EventEmitter();
   @Output() error = new EventEmitter();
+  @Output() close = new EventEmitter();
 
   loading = false;
 
   handlePayment() {
     this.loading = true;
 
-    new (window as any).EgolePay({
+    new (window as any).InlineJS({
       merchantId: '22C811B4-EF62-*******************',
       apiKey: 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       secretKey: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxx',
       uGuid: '12345',
       txnRef: this.txnRef,
-      type: 'Webguid',
+      type: 'WebGuid',
+      amount: this.amount,
+      email: this.email,
       onSuccess: (response: unknown) => {
         this.loading = false;
         this.success.emit(response);
@@ -575,6 +610,10 @@ export class PaymentComponent {
       onError: (err: unknown) => {
         this.loading = false;
         this.error.emit(err);
+      },
+      onClose: () => {
+        this.loading = false;
+        this.close.emit();
       }
     });
   }
@@ -598,8 +637,11 @@ export class PaymentComponent {
           language: 'html',
           code: `<app-payment
   txnRef="SCP43202660440414"
+  [amount]="75295.50"
+  email="customer@example.com"
   (success)="handleSuccess($event)"
   (error)="handleError($event)"
+  (close)="handleClose()"
 ></app-payment>`
         }
       ]

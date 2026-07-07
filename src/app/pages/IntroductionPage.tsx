@@ -13,7 +13,7 @@ export default function IntroductionPage() {
       title: '1. Reference Validation',
       icon: Search,
       image: '/sdk_flow_step1.png',
-      description: 'Once initialized, the SDK automatically queries the EgolePay gateway with the transaction reference (txnRef). If valid, it retrieves and displays the bill information:',
+      description: 'Once initialized, the SDK automatically queries the EgolePay gateway with the transaction reference (txnRef) and amount. If valid, it retrieves and displays the bill information:',
       details: [
         'PID: Unique payment ID associated with the customer.',
         'Revenue: The description of the bill (e.g. Safety Certification).',
@@ -62,10 +62,10 @@ export default function IntroductionPage() {
     <DocLayout>
       <div className="space-y-10">
         <div className="rounded-[28px] border border-border bg-gradient-to-br from-[#fff9ed] via-background to-[#fff1d6] p-8 shadow-sm dark:from-[#2a2317] dark:via-background dark:to-[#1d160c]">
-          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#C56A00]">EgolePay Paybill SDK</p>
-          <h1 className="mt-3 max-w-3xl text-4xl font-semibold tracking-tight">Launch EgolePay checkout in three steps.</h1>
+          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#C56A00]">EgolePay PulseBridge SDK</p>
+          <h1 className="mt-3 max-w-3xl text-4xl font-semibold tracking-tight">Launch checkout in three steps.</h1>
           <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
-            This documentation covers the hosted JavaScript SDK for bill payments. Initialize checkout with your credentials and transaction reference, validate billing details dynamically, and process payments via Card or Bank Transfer.
+            This documentation covers the hosted PulseBridge InlineJS SDK. Initialize checkout with credentials, transaction reference, amount, and customer email to process payments via Card or Bank Transfer.
           </p>
           <div className="mt-6 flex flex-wrap gap-3 text-sm">
             <Link to="/docs/include-sdk" className="rounded-full bg-[#FF8000] px-4 py-2 font-medium text-white transition-colors hover:bg-[#E97500]">
@@ -84,7 +84,7 @@ export default function IntroductionPage() {
         <section id="visual-flow" className="space-y-6">
           <h2>Visual Checkout Journey</h2>
           <p className="text-muted-foreground">
-            Click through the interactive steps below to explore how the EgolePay Paybill SDK guides payers from reference validation to final payment:
+            Click through the interactive steps below to explore how the InlineJS SDK guides payers from reference validation to final payment:
           </p>
           
           <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
@@ -166,14 +166,14 @@ export default function IntroductionPage() {
               <p className="text-sm font-semibold text-[#C56A00]">Step 2</p>
               <h3 id="initialize-checkout" className="mt-2">Initialize payment</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Pass your credentials and transaction reference number (e.g. <code>SCP43202660440414</code>) into <code>new EgolePay()</code>.
+                Pass credentials, transaction reference number (e.g. <code>SCP43202660440414</code>), amount, and customer email to <code>new InlineJS()</code>.
               </p>
             </div>
             <div className="rounded-2xl border border-border bg-card p-5">
               <p className="text-sm font-semibold text-[#C56A00]">Step 3</p>
               <h3 id="go-live" className="mt-2">Go live</h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Switch from an <code>sk_test_</code> key to an <code>sk_live_</code> key when you are ready for production.
+                Switch from test keys to production keys when you are ready to process live traffic.
               </p>
             </div>
           </div>
@@ -182,27 +182,44 @@ export default function IntroductionPage() {
         <section id="first-integration">
           <h2>First Integration</h2>
           <p className="mb-4 text-muted-foreground">
-            The SDK is designed to be drop-in. Load the script once, then trigger checkout by passing the configuration parameters.
+            Load the Hosted script once, then instantiate the checkout wizard dynamically from the browser.
           </p>
           <CodeBlock
-            code={`<script src="https://docs.api.egolepay.com/v1/sdk.js"></script>
+            code={`<script src="https://apigateway-test.egolepay.com/pulsebridge-sdk.js"></script>
 
 <button onclick="startPayment()">Pay Bill</button>
 
 <script>
+  let paymentSuccessfullyCompleted = false;
+
   function startPayment() {
-    new EgolePay({
+    const payment = new InlineJS({
+      // 🔐 REQUIRED: Your credentials from EgolePay dashboard
       merchantId: '22C811B4-EF62-*******************',
       apiKey: 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       secretKey: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxx',
-      uGuid: '12345',
-      txnRef: 'SCP43202660440414',
-      type: 'Webguid',
+      uGuid: '12345',       // Egole Wallet ID
+      type: 'WebGuid',      // Integration type
+      
+      // 💰 Transaction Details
+      txnRef: 'SCP43202660440414',  // Unique transaction reference
+      amount: 75295.50,            // Amount in NGN
+      email: 'customer@example.com', // Customer email
+      
+      // 📝 Optional
+      currency: 'NGN',
+      description: 'LIRS Safety Certification Payment',
+
+      /* ✅ CALLBACKS */
       onSuccess: function (response) {
-        window.location.href = '/success?ref=' + response.transactionReference;
+        console.log('onSuccess', response);
+        paymentSuccessfullyCompleted = true;
+      },
+      onClose: function (info) {
+        console.log("onClose");
       },
       onError: function (error) {
-        alert(error.message);
+        console.log('Error', error);
       }
     });
   }
