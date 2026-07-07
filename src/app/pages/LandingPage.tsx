@@ -46,7 +46,6 @@ export default function LandingPage() {
                 <CreditCard className="w-4 h-4" />
                 EgolePay PulseBridge SDK
               </div>
-
               <h1 className="max-w-3xl text-4xl font-semibold leading-tight md:text-6xl">
                 Ship verified bill payments in minutes.
               </h1>
