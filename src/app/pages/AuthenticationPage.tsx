@@ -60,7 +60,7 @@ export default function AuthenticationPage() {
           </p>
           <CodeBlock 
             code={`new EgolePay({
-  merchantId: '22C811B4-EF62-48DA-8F35-E714F3992BC4',
+  merchantId: '22C811B4-EF62-*******************',
   apiKey: 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
   secretKey: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxx',
   uGuid: '12345',

@@ -91,7 +91,7 @@ export const apiEndpoints: ApiEndpoint[] = [
 <script>
   function startPayment() {
     new EgolePay({
-      merchantId: '22C811B4-EF62-48DA-8F35-E714F3992BC4',
+      merchantId: '22C811B4-EF62-*******************',
       apiKey: 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       secretKey: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxx',
       uGuid: '12345',
@@ -120,7 +120,7 @@ export const apiEndpoints: ApiEndpoint[] = [
 <script>
   function startPayment() {
     new EgolePay({
-      merchantId: '22C811B4-EF62-48DA-8F35-E714F3992BC4',
+      merchantId: '22C811B4-EF62-*******************',
       apiKey: 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       secretKey: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxx',
       uGuid: '12345',
@@ -145,7 +145,7 @@ export const apiEndpoints: ApiEndpoint[] = [
   window.addEventListener('load', function () {
     document.getElementById('pay-button').addEventListener('click', function () {
       new EgolePay({
-        merchantId: '22C811B4-EF62-48DA-8F35-E714F3992BC4',
+        merchantId: '22C811B4-EF62-*******************',
         apiKey: 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
         secretKey: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxx',
         uGuid: '12345',
@@ -171,7 +171,7 @@ export const apiEndpoints: ApiEndpoint[] = [
     method: 'SDK',
     route: 'new EgolePay(config)',
     copyValue: `new EgolePay({
-  merchantId: '22C811B4-EF62-48DA-8F35-E714F3992BC4',
+  merchantId: '22C811B4-EF62-*******************',
   apiKey: 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
   secretKey: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxx',
   uGuid: '12345',
@@ -181,7 +181,7 @@ export const apiEndpoints: ApiEndpoint[] = [
     authenticationRequired: false,
     requestParametersTitle: 'Configuration Options',
     requestParameters: [
-      { name: 'merchantId', type: 'string', required: true, description: 'Merchant unique identifier (e.g. 22C811B4-EF62-48DA-8F35-E714F3992BC4).' },
+      { name: 'merchantId', type: 'string', required: true, description: 'Merchant unique identifier (e.g. 22C811B4-EF62-*******************).' },
       { name: 'apiKey', type: 'string', required: true, description: 'Your EgolePay API key. Use sk_test_ prefix in sandbox.' },
       { name: 'secretKey', type: 'string', required: true, description: 'Your EgolePay Secret/Public key. Use pk_test_ prefix in sandbox.' },
       { name: 'uGuid', type: 'string', required: true, description: 'Egole Wallet ID (e.g. 12345 for sandbox testing).' },
@@ -192,7 +192,7 @@ export const apiEndpoints: ApiEndpoint[] = [
     sampleRequestLanguage: 'javascript',
     sampleRequest: `function startPayment() {
   new EgolePay({
-    merchantId: '22C811B4-EF62-48DA-8F35-E714F3992BC4',
+    merchantId: '22C811B4-EF62-*******************',
     apiKey: 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
     secretKey: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxx',
     uGuid: '12345',
@@ -230,7 +230,7 @@ export const apiEndpoints: ApiEndpoint[] = [
           language: 'javascript',
           code: `function payBill() {
   new EgolePay({
-    merchantId: '22C811B4-EF62-48DA-8F35-E714F3992BC4',
+    merchantId: '22C811B4-EF62-*******************',
     apiKey: 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
     secretKey: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxx',
     uGuid: '12345',
@@ -282,7 +282,7 @@ export const apiEndpoints: ApiEndpoint[] = [
     sampleRequestTitle: 'Callback Configuration',
     sampleRequestLanguage: 'javascript',
     sampleRequest: `new EgolePay({
-  merchantId: '22C811B4-EF62-48DA-8F35-E714F3992BC4',
+  merchantId: '22C811B4-EF62-*******************',
   apiKey: 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
   secretKey: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxx',
   uGuid: '12345',
@@ -391,7 +391,7 @@ function PaymentButton({ txnRef, onSuccess, onError }) {
     }
     
     new window.EgolePay({
-      merchantId: '22C811B4-EF62-48DA-8F35-E714F3992BC4',
+      merchantId: '22C811B4-EF62-*******************',
       apiKey: process.env.REACT_APP_EGOLEPAY_KEY,
       secretKey: process.env.REACT_APP_EGOLEPAY_SECRET_KEY,
       uGuid: '12345',
@@ -478,7 +478,7 @@ export default {
       this.loading = true;
 
       new window.EgolePay({
-        merchantId: '22C811B4-EF62-48DA-8F35-E714F3992BC4',
+        merchantId: '22C811B4-EF62-*******************',
         apiKey: process.env.VUE_APP_EGOLEPAY_KEY,
         secretKey: process.env.VUE_APP_EGOLEPAY_SECRET_KEY,
         uGuid: '12345',
@@ -562,7 +562,7 @@ export class PaymentComponent {
     this.loading = true;
 
     new (window as any).EgolePay({
-      merchantId: '22C811B4-EF62-48DA-8F35-E714F3992BC4',
+      merchantId: '22C811B4-EF62-*******************',
       apiKey: 'sk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       secretKey: 'pk_test_xxxxxxxxxxxxxxxxxxxxxxxxxxx',
       uGuid: '12345',
